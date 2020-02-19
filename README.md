@@ -28,7 +28,7 @@ See below if you want to bundle by yourself.
 The following dependencies are required and must be installed separately.
 
 1. [Python 3.7](https://www.python.org/downloads/windows/)  
-   Accoprding to the README of PyInstaller, the supported Python version is 3.5-3.7 now (Feb. 19th, 2020).
+   Accoprding to the README of PyInstaller, the supported Python version is 3.5-3.7 now (Feb. 19th, 2020). To create a 32-bit executable, run PyInstaller under a 32-bit Python.
 
 2. PyInstaller  
    ```shell

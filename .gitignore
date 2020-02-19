@@ -2,10 +2,11 @@
 repository/you-get/
 
 # PyInstaller
-build/you-get/
 *.spec
+build/you-get/
 dist/file_version_info.txt
 dist/you-get.exe
 
 # devscripts
 devscripts/use-proxy.settings
+dist/release/

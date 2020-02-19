@@ -11,10 +11,11 @@
 依次安装以下依赖或运行相应命令。
 
 1. [Python 3.7](https://www.python.org/downloads/windows/)  
-   根据 PyInstaller 的说明文档，其目前(2020-02-18)支持的 Python 版本为 3.5-3.7。这里选择目前最高版本 3.7.6。（此外 you-get 目前最新版本为 0.4.1403）
+   根据 PyInstaller 的说明文档，其目前(2020-02-18)支持的 Python 版本为 3.5-3.7。这里选择目前最高版本 3.7.6。若需创建32位的可执行文件，请在32位Python环境下运行PyInstaller。（此外 you-get 目前最新版本为 0.4.1403）
 
 2. PyInstaller  
    ```shell
+   # 可以加上使用镜像源的参数： --index-url=https://pypi.tuna.tsinghua.edu.cn/simple
    $ pip install pyinstaller
    ```
 

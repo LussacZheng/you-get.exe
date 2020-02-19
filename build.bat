@@ -48,7 +48,7 @@ echo.
 
 popd
 :: Recover everything in you-get.git after build
-for /f "delims=" %%i in ('dir /b /a:a _extractors') do (
+for /f "delims=" %%i in ('dir /b /a-d _extractors') do (
     del /Q you-get\src\you_get\extractors\%%i >NUL 2>NUL
 )
 move __init__.py you-get\src\you_get\extractors\ > NUL
