@@ -9,3 +9,13 @@
 # the files will be saved with the line endings CRLF, which are suitable
 # for Windows batchfiles.
 *.bat -text
+
+# Other files
+*.py text eol=lf
+
+#####
+
+## Linguist config (https://github.com/github/linguist/#vendored-code)
+repository/_extractors/*.py linguist-vendored
+## https://git-scm.com/docs/gitattributes#Documentation/gitattributes.txt-Unspecified
+repository/_extractors/__init__.py !linguist-vendored

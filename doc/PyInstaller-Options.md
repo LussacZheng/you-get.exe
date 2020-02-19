@@ -2,7 +2,7 @@
 
 > [PyInstaller](https://github.com/pyinstaller/pyinstaller) bundles a Python application and all its dependencies into a single package. The user can run the packaged app without installing a Python interpreter or any modules.
 
-下文我将简单叙述一下如何使用 PyInstaller 将 you-get 打包为可独立运行的 exe 程序 (Windows)。
+本文将叙述如何使用 PyInstaller 将 you-get 打包为可独立运行的 exe 程序 (Windows)。
 
 ---
 
@@ -150,13 +150,7 @@ ModuleNotFoundError: No module named 'you_get.extractors'
 > pyinstaller -F --path=src you-get --hidden-import=you_get.extractors --hidden-import=you_get.cli_wrapper
 ```
 
-## Final command
-
-综上所述，**最后打包的命令为**：
-
-```shell
-> pyinstaller -F --path=src you-get --hidden-import=you_get.extractors --hidden-import=you_get.cli_wrapper --hidden-import=you_get.processor --hidden-import=you_get.util
-```
+---
 
 ## Issues
 
@@ -232,4 +226,41 @@ from .ixigua import *
 
 这些 extractors 均以 `_` 开头，而（参照 `Makefile`）直接运行 `python setup.py sdist`生成的  `dist/you-get-0.4.1403.tar.gz` 则不包含这些 extractors 。 暂不知其原因。
 
-根据上文分析，可以想到解决办法为在 `src/you_get/extractors/__init__.py` 中逐一导入这些模块，再重新打包。
+根据上文分析，可以想到解决办法为：将 `"you-get-0.4.1403.tar.gz" you-get-0.4.1403/src/you_get/extractors/` 中以 `_` 开头的 `py` 文件复制到 clone 目录对应位置，并编辑 `src/you_get/extractors/__init__.py` ，在其中逐一导入这些模块，最后再重新打包。
+
+```python
+# 为 src/you_get/extractors/__init__.py 文件追加以下语句
+from .baomihua import *
+from .giphy import *
+from .huomaotv import *
+from .iwara import *
+from .ixigua import *
+from .missevan import *
+from .qie_video import *
+from .qq_egame import *
+from .toutiao import *
+from .vidto import *
+from .ximalaya import *
+from .yizhibo import *
+
+from ._blip import *
+from ._catfun import *
+from ._coursera import *
+from ._dongting import *
+from ._jpopsuki import *
+from ._qianmo import *
+from ._songtaste import *
+from ._thvideo import *
+from ._vid48 import *
+from ._videobam import *
+```
+
+---
+
+## Final command
+
+综上所述，**最后打包的命令为**：
+
+```shell
+> pyinstaller -F --path=src you-get --hidden-import=you_get.extractors --hidden-import=you_get.cli_wrapper --hidden-import=you_get.processor --hidden-import=you_get.util
+```
