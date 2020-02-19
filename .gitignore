@@ -1,0 +1,11 @@
+# You-Get repository from `git clone`
+repository/you-get/
+
+# PyInstaller
+build/you-get/
+*.spec
+dist/file_version_info.txt
+dist/you-get.exe
+
+# devscripts
+devscripts/use-proxy.settings

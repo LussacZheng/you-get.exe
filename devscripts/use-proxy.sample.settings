@@ -1,0 +1,8 @@
+# EDIT AT YOUR OWN RISK.
+
+# set "true" to enable proxy for the CMD console window
+GlobalProxy: true
+ProxyHost: http://127.0.0.1
+# By default, set to 10809 for V2Ray, and 1080 for ShadowSocks
+HttpPort: 10809
+HttpsPort: 10809
