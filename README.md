@@ -7,7 +7,7 @@
 
 Use [PyInstaller](https://github.com/pyinstaller/pyinstaller) to bundle [You-Get](https://github.com/soimort/you-get) into a single executable for Windows.
 
-## Get you-get.exe
+## Get "you-get.exe"
 
 > Notice: This is **NOT** official build.
 
@@ -28,9 +28,10 @@ See below if you want to bundle by yourself.
 The following dependencies are required and must be installed separately.
 
 1. [Python 3.7](https://www.python.org/downloads/windows/)  
-   Accoprding to the README of PyInstaller, the supported Python version is 3.5-3.7 now (Feb. 19th, 2020). To create a 32-bit executable, run PyInstaller under a 32-bit Python.
+   According to the [README](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms) of PyInstaller, the supported Python version is 3.5-3.7 now (Feb. 19th, 2020). To create a 32-bit executable, run PyInstaller under a 32-bit Python.
 
-2. PyInstaller  
+2. PyInstaller
+
    ```shell
    $ pip install pyinstaller
    ```
@@ -43,7 +44,7 @@ The following dependencies are required and must be installed separately.
 $ git clone https://github.com/LussacZheng/you-get.exe.git
 ```
 
-### Build for first time
+### Build for the first time
 
 There are several batchfiles, just click them by the following order:
 
@@ -51,7 +52,7 @@ There are several batchfiles, just click them by the following order:
    (It will clone the you-get repository by `git clone` . If you want to use proxy when cloning, edit `devscripts/use-proxy.settings` according to the sample.)
 2. After initialization, run `build.bat` .
 3. Find the executable in `dist/` folder.
-   
+
 ### Build again if You-Get upgraded
 
 To re-build after the new release of You-Get:
