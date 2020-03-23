@@ -49,7 +49,6 @@ from .miaopai import *
 from .miomio import *
 from .mixcloud import *
 from .mtv81 import *
-from .musicplayon import *
 from .nanagogo import *
 from .naver import *
 from .netease import *
@@ -74,7 +73,6 @@ from .tumblr import *
 from .twitter import *
 from .ucas import *
 from .veoh import *
-from .videomega import *
 from .vimeo import *
 from .vine import *
 from .vk import *
@@ -100,7 +98,8 @@ from .missevan import *
 from .qie_video import *
 from .qq_egame import *
 from .toutiao import *
-from .vidto import *
+# https://github.com/soimort/you-get/compare/v0.4.1410...v0.4.1423#diff-64007456936a8456d40ebe74263b851b
+# from .vidto import *
 from .ximalaya import *
 from .yizhibo import *
 
