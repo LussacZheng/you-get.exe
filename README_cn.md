@@ -3,7 +3,8 @@
 # You-Get 非官方构建的可执行文件
 
 ![platform](https://img.shields.io/badge/platform-windows-brightgreen)
-![build](https://img.shields.io/badge/build-200219-blue)
+![GitHub release](https://img.shields.io/github/v/release/LussacZheng/you-get.exe?include_prereleases&label=build)
+![GitHub All Releases](https://img.shields.io/github/downloads/LussacZheng/you-get.exe/total?color=yellowgreen)
 
 使用 [PyInstaller](https://github.com/pyinstaller/pyinstaller) 打包 [You-Get](https://github.com/soimort/you-get) 为一个独立的可执行文件 (Windows)。
 
