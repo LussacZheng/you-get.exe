@@ -58,10 +58,18 @@ $ git clone https://github.com/LussacZheng/you-get.exe.git
 
 在 You-Get 发布新版本后，按以下步骤重新打包：
 
-1. 运行 `devscripts/update.bat` 。  
+1. 确保此项目脚本文件为最新：
+
+   ```shell
+   $ git pull
+   ```
+
+   *若 You-Get 修改了 [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) 而我尚未及时跟进并提交，你需要参照 [此处](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) 手动修改 `repository/_extractors/__init__.py` 。*
+
+2. 运行 `devscripts/update.bat` 。  
    （该脚本也会从 `devscripts/use-proxy.settings` 中读取代理设置）
-2. 运行 `build.bat`.
-3. 打包好的可执行文件在 `dist/` 文件夹下。
+3. 运行 `build.bat`.
+4. 打包好的可执行文件在 `dist/` 文件夹下。
 
 ### 更多信息
 
