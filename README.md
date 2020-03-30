@@ -4,25 +4,25 @@
 
 ![platform](https://img.shields.io/badge/platform-windows-brightgreen)
 ![GitHub release](https://img.shields.io/github/v/release/LussacZheng/you-get.exe?include_prereleases&label=build)
-![GitHub All Releases](https://img.shields.io/github/downloads/LussacZheng/you-get.exe/total?color=yellowgreen)
+[![GitHub All Releases](https://img.shields.io/github/downloads/LussacZheng/you-get.exe/total?color=green)](https://github.com/LussacZheng/you-get.exe/releases)
 
 Use [PyInstaller](https://github.com/pyinstaller/pyinstaller) to bundle [You-Get](https://github.com/soimort/you-get) into a single executable for Windows.
 
 ## Get "you-get.exe"
 
-> Notice: This is **NOT** official build.
+> Notice: This is **NOT** the official build.
 
-Download the latest build executable from [Release](https://github.com/LussacZheng/you-get.exe/releases).
+Download the latest build executable from [Releases Page](https://github.com/LussacZheng/you-get.exe/releases).
 
 ## Bugs
 
-If something went wrong when using the latest released  executable, feel free to [submit an issue](https://github.com/LussacZheng/you-get.exe/issues). If you don't have a GitHub account, leave a message in [this page](https://blog.lussac.net/archives/315/).
+If something goes wrong when using the latest released  executable, feel free to [submit an issue](https://github.com/LussacZheng/you-get.exe/issues). If you don't have a GitHub account, leave a message in [this page](https://blog.lussac.net/archives/315/).
 
 ---
 
 ## Developer Instructions
 
-See below if you want to bundle by yourself.
+See below if you want to bundle and build by yourself.
 
 ### Preparation
 
