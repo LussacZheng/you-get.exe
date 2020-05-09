@@ -16,7 +16,17 @@
 
 ## 反馈
 
-在使用过程中遇到任何问题（请先确保为最新版），你可以 [提交 Issue](https://github.com/LussacZheng/you-get.exe/issues) 进行反馈。若没有 GitHub 账号，可以在 [这里](https://blog.lussac.net/archives/315/) 留言。
+在使用过程中遇到任何问题（请先确保为最新版），你可以 [提交 Issue](https://github.com/LussacZheng/you-get.exe/issues) 进行反馈。若没有 GitHub 账号，可以在 [这里](https://blog.lussac.net/archives/315/) 留言。反馈时最好能附带上 debug 信息，你可以通过添加 `--debug` 参数来获得详细的错误报告：
+
+```shell
+you-get --debug https://your.video/url/here
+```
+
+对于 SSL 相关的问题，请尝试使用 `-k` 参数：
+
+```shell
+you-get -k --debug https://your.video/url/here
+```
 
 ---
 

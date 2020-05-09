@@ -16,7 +16,17 @@ Download the latest build executable from [Releases Page](https://github.com/Lus
 
 ## Bugs
 
-If something goes wrong when using the latest released  executable, feel free to [submit an issue](https://github.com/LussacZheng/you-get.exe/issues). If you don't have a GitHub account, leave a message in [this page](https://blog.lussac.net/archives/315/).
+If something goes wrong when using the latest released executable, feel free to [submit an issue](https://github.com/LussacZheng/you-get.exe/issues). If you don't have a GitHub account, leave a message in [this page](https://blog.lussac.net/archives/315/). You'd better attach the debug info. Get the detailed error report by adding the `--debug` option:
+
+```shell
+you-get --debug https://your.video/url/here
+```
+
+For SSL related issues, try to use `-k` option:
+
+```shell
+you-get -k --debug https://your.video/url/here
+```
 
 ---
 
