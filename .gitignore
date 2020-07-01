@@ -4,9 +4,16 @@ repository/you-get/
 # PyInstaller
 *.spec
 build/you-get/
-dist/file_version_info.txt
-dist/you-get.exe
+build/file_version_info.txt
 
 # devscripts
 devscripts/use-proxy.settings
-dist/release/
+
+# Built files
+dist/you-get.exe
+dist/LICENSE.txt
+## Ignore every file in "dist/" except "dist/released/.gitkeep"
+dist/*
+!dist/released/
+dist/released/*
+!dist/released/.gitkeep

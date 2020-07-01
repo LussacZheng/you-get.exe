@@ -8,6 +8,7 @@
 
 if exist build\you-get\ rd /S /Q build\you-get
 if exist dist\you-get.exe del /S /Q dist\you-get.exe >NUL 2>NUL
+if exist dist\LICENSE.txt del /S /Q dist\LICENSE.txt >NUL 2>NUL
 
 if NOT exist repository\you-get\you-get (
     echo.
@@ -35,7 +36,7 @@ pyinstaller -F --path=src ^
     --distpath ..\..\dist ^
     --workpath ..\..\build ^
     --specpath ..\..\build ^
-    --icon ..\dist\you-get.ico ^
+    --icon ..\build\you-get.ico ^
     --hidden-import=you_get.extractors ^
     --hidden-import=you_get.cli_wrapper ^
     --hidden-import=you_get.processor ^
@@ -46,6 +47,8 @@ echo.
 echo ============================================================
 echo.
 
+xcopy LICENSE.txt ..\..\dist\ >NUL
+
 popd
 :: Recover everything in you-get.git after build
 for /f "delims=" %%i in ('dir /b /a-d _extractors') do (
@@ -53,9 +56,9 @@ for /f "delims=" %%i in ('dir /b /a-d _extractors') do (
 )
 move __init__.py you-get\src\you_get\extractors\ > NUL
 
-cd ..\dist
+cd ..\build
 if exist file_version_info.txt (
-    pyi-set_version file_version_info.txt you-get.exe
+    pyi-set_version file_version_info.txt ..\dist\you-get.exe
     echo.
     echo ============================================================
     echo.
