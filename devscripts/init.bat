@@ -1,6 +1,9 @@
 @rem - Encoding:utf-8; Mode:Batch; Language:en; LineEndings:CRLF -
 @echo off
 
+:: Set the root directory
+cd "%~dp0"
+
 call use-proxy.bat
 cd ..\repository
 

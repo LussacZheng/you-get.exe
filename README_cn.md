@@ -2,9 +2,9 @@
 
 # You-Get 非官方构建的可执行文件
 
-![platform](https://img.shields.io/badge/platform-windows-brightgreen)
+![platform](https://img.shields.io/badge/platform-Windows-brightgreen?logo=windows)
 ![GitHub release](https://img.shields.io/github/v/release/LussacZheng/you-get.exe?include_prereleases&label=build)
-[![GitHub All Releases](https://img.shields.io/github/downloads/LussacZheng/you-get.exe/total?color=green)](https://github.com/LussacZheng/you-get.exe/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/LussacZheng/you-get.exe/total?color=green&logo=github)](https://github.com/LussacZheng/you-get.exe/releases)
 
 使用 [PyInstaller](https://github.com/pyinstaller/pyinstaller) 打包 [You-Get](https://github.com/soimort/you-get) 为一个独立的可执行文件 (Windows)。
 
