@@ -16,27 +16,35 @@ set "root=%root:~0,-1%"
 cd "%root%"
 
 
-rem ================= STEP 1: Clean =================
+rem ================= STEP 1: Check =================
 
 
-if exist build\you-get\ rd /S /Q build\you-get
-if exist dist\ (
-    pushd dist
-    if exist you-get.exe del /S /Q you-get.exe >NUL 2>NUL
-    if exist LICENSE.txt del /S /Q LICENSE.txt >NUL 2>NUL
-    if exist README.md del /S /Q README.md >NUL 2>NUL
-    if exist README_cn.md del /S /Q README_cn.md >NUL 2>NUL
-    popd
-)
-
-
-:: Step 2. Check
 if NOT exist repository\you-get\you-get (
     echo.
     echo  * Please run "devscripts\init.bat" first or clone the repository of "you-get".
     pause > NUL
-    exit
+    exit /b 1
 )
+
+
+rem ================= STEP 2: Clean =================
+
+
+call :echo_title "Clean before building"
+
+if exist build\you-get\ rd /S /Q build\you-get
+if exist dist\ (
+    pushd dist
+    for %%i in ( you-get.exe LICENSE.txt README.md README_cn.md ) do (
+        if exist %%i ( del .\%%i && echo  * Deleted "%root%\dist\%%i" )
+    )
+    echo.
+    if exist you-get*win*UB*.zip del /P .\you-get*win*UB*.zip
+    popd
+)
+
+call :echo_hrd
+echo  * Clean completed.
 
 
 rem ================= STEP 3: Build =================
@@ -53,11 +61,7 @@ xcopy _extractors\*.py you-get\src\you_get\extractors\ >NUL
 
 pushd you-get
 
-echo.
-echo ============================================================
-echo  * pyinstaller "you-get" ...
-echo ------------------------------------------------------------
-echo.
+call :echo_title "pyinstaller "you-get""
 
 :: PyInstaller bundle command - START
 pyinstaller -F --path=src ^
@@ -82,29 +86,21 @@ move __init__.py you-get\src\you_get\extractors\ > NUL
 
 cd ..\build
 if exist file_version_info.txt (
-    echo.
-    echo ============================================================
-    echo.
+    call :echo_hrd
     pyi-set_version file_version_info.txt ..\dist\you-get.exe
 )
 cd ..
 
-echo.
-echo ============================================================
-echo.
-echo  * Build logs saved in:       "%~dp0build\you-get\"
-echo  * Build executable saved to: "%~dp0dist\you-get.exe"
+call :echo_hrd
+echo  * Build logs saved in:       "%root%\build\you-get\"
+echo  * Build executable saved to: "%root%\dist\you-get.exe"
 echo  * Build completed.
 
 
 rem ================= STEP 4: Zip =================
 
 
-echo.
-echo ============================================================
-echo  * zip "you-get.zip" ...
-echo ------------------------------------------------------------
-echo.
+call :echo_title "zip "you-get.zip""
 
 :: copy the files to be zipped
 xcopy /Y repository\you-get\LICENSE.txt dist\ >NUL
@@ -125,28 +121,59 @@ for /f "tokens=5 delims='x" %%i in ('type "build\%_info%" ^| find "ProductVersio
 if "%_arch%"=="86" ( set "_arch=32" )
 for /f %%i in ('WMIC OS GET LocalDateTime ^| find "."') do ( set "_LDT=%%i" )
 set "_date=%_LDT:~2,2%%_LDT:~4,2%%_LDT:~6,2%"
-set "_zip_archive=you-get-%_version%-win%_arch%_UB%_date%.zip"
+set "_zip_archive=you-get_%_version%_win%_arch%_UB%_date%.zip"
 
 cd dist
 ..\bin\zip.exe %_zip_archive% you-get.exe LICENSE.txt README.md README_cn.md -z < LICENSE.txt
 
-echo.
-echo  * Zip archive file saved to: "%~dp0dist\%_zip_archive%"
+call :echo_hrd
+echo  * Zip archive file saved to: "%root%\dist\%_zip_archive%"
 echo  * Zip completed.
-echo.
-echo ============================================================
-echo.
-echo  * All completed.
-echo.
-echo ============================================================
-echo.
 
+
+rem ================= STEP 5: Finish =================
+
+
+call :echo_end "All completed."
 pause
-goto :eof
+exit /b 0
+
+
+rem ================= FUNCTIONS =================
+
 
 :no_zip_exe
 echo.
 echo  * Please download "zip.exe" and "bzip2.dll", and put them into "bin/".
 pause > NUL
-exit
+exit /b 1
 
+
+:echo_title
+call :echo_hre
+echo  * %~1 ...
+call :echo_hrd
+goto :eof
+
+
+:: echo horizontal rule (equal)
+:echo_hre
+echo.
+echo ============================================================
+echo.
+goto :eof
+
+
+:: echo horizontal rule (dash)
+:echo_hrd
+echo.
+echo ------------------------------------------------------------
+echo.
+goto :eof
+
+
+:echo_end
+call :echo_hre
+echo  * %~1
+call :echo_hre
+goto :eof
