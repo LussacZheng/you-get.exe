@@ -85,3 +85,9 @@ $ git clone https://github.com/LussacZheng/you-get.exe.git
 ### 更多信息
 
 查阅 [**doc**](https://github.com/LussacZheng/you-get.exe/tree/master/doc) 文件夹以了解更多信息。
+
+---
+
+## License
+
+[You-Get](https://github.com/soimort/you-get)  is originally distributed under the [MIT license](https://github.com/soimort/you-get/blob/develop/LICENSE.txt).

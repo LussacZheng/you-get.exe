@@ -84,3 +84,9 @@ To re-build after the new release of You-Get:
 ### More Information
 
 See more information in [**doc**](https://github.com/LussacZheng/you-get.exe/tree/master/doc) folder.
+
+---
+
+## License
+
+[You-Get](https://github.com/soimort/you-get)  is originally distributed under the [MIT license](https://github.com/soimort/you-get/blob/develop/LICENSE.txt).
