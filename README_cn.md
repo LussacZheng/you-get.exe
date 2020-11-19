@@ -38,8 +38,8 @@ you-get -k --debug https://your.video/url/here
 
 依次安装以下依赖或运行相应命令。
 
-1. [Python 3.7 或 3.8](https://www.python.org/downloads/windows/)  
-   根据 PyInstaller 的[说明文档](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms)，其目前(2020-7-10)支持的 Python 版本为 3.5-3.8。若需创建32位的可执行文件，请在32位 Python 环境下运行 PyInstaller 。
+1. [Python 3.7 或 3.9](https://www.python.org/downloads/windows/)  
+   根据 PyInstaller 的[说明文档](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms)，其目前(2020-11-18)支持的 Python 版本为 3.5-3.9。若需创建32位的可执行文件，请在32位 Python 环境下运行 PyInstaller 。
 
 2. PyInstaller
 
@@ -90,4 +90,4 @@ $ git clone https://github.com/LussacZheng/you-get.exe.git
 
 ## License
 
-[You-Get](https://github.com/soimort/you-get)  is originally distributed under the [MIT license](https://github.com/soimort/you-get/blob/develop/LICENSE.txt).
+[You-Get](https://github.com/soimort/you-get) is originally distributed under the [MIT license](https://github.com/soimort/you-get/blob/develop/LICENSE.txt).

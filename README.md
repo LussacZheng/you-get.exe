@@ -38,8 +38,8 @@ See below if you want to bundle and build by yourself.
 
 The following dependencies are required and must be installed separately.
 
-1. [Python 3.7 or 3.8](https://www.python.org/downloads/windows/)  
-   According to the [README](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms) of PyInstaller, the supported Python version is 3.5-3.8 now (July 10th, 2020). To create a 32-bit executable, run PyInstaller under a 32-bit Python.
+1. [Python 3.7-3.9](https://www.python.org/downloads/windows/)  
+   According to the [README](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms) of PyInstaller, the supported Python version is 3.5-3.9 now (Nov. 18th, 2020). To create a 32-bit executable, run PyInstaller under a 32-bit Python.
 
 2. PyInstaller
 
@@ -89,4 +89,4 @@ See more information in [**doc**](https://github.com/LussacZheng/you-get.exe/tre
 
 ## License
 
-[You-Get](https://github.com/soimort/you-get)  is originally distributed under the [MIT license](https://github.com/soimort/you-get/blob/develop/LICENSE.txt).
+[You-Get](https://github.com/soimort/you-get) is originally distributed under the [MIT license](https://github.com/soimort/you-get/blob/develop/LICENSE.txt).
