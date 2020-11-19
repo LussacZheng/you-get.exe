@@ -38,7 +38,7 @@ you-get -k --debug https://your.video/url/here
 
 依次安装以下依赖或运行相应命令。
 
-1. [Python 3.7 或 3.9](https://www.python.org/downloads/windows/)  
+1. [Python 3.7-3.9](https://www.python.org/downloads/windows/)  
    根据 PyInstaller 的[说明文档](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms)，其目前(2020-11-18)支持的 Python 版本为 3.5-3.9。若需创建32位的可执行文件，请在32位 Python 环境下运行 PyInstaller 。
 
 2. PyInstaller
