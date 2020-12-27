@@ -80,7 +80,8 @@ from .w56 import *
 from .wanmen import *
 from .xiami import *
 from .xinpianchang import *
-from .yinyuetai import *
+# https://github.com/soimort/you-get/compare/v0.4.1488...v0.4.1500#diff-643b8c5ae70162392985398dc3063176769d811c51b8eaea8f3f3722bdf80278L83
+# from .yinyuetai import *
 from .yixia import *
 from .youku import *
 from .youtube import *
