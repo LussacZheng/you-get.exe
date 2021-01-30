@@ -8,13 +8,17 @@
 setlocal
 
 
-rem ================= STEP 0: Root =================
+rem ================= STEP 0: Init =================
 
 
 :: Set the root directory
 set "root=%~dp0"
 set "root=%root:~0,-1%"
 cd "%root%"
+
+:: Set a list of required files
+set "_bin_list=bzip2.dll zip.exe"
+set "_zip_list=you-get.exe LICENSE.txt README.md README_cn.md sha256sum.txt"
 
 
 rem ================= STEP 1: Check =================
@@ -27,6 +31,14 @@ if NOT exist repository\you-get\you-get (
     exit /b 1
 )
 
+:: Check the necessary tools
+pushd bin
+for %%i in ( %_bin_list% ) do (
+    if NOT exist %%i call :no_exe "%%i"
+)
+if "%errorlevel%" == "1" goto :no_exe
+popd
+
 
 rem ================= STEP 2: Clean =================
 
@@ -36,7 +48,7 @@ call :echo_title "Clean before building"
 if exist build\you-get\ rd /S /Q build\you-get
 if exist dist\ (
     pushd dist
-    for %%i in ( you-get.exe LICENSE.txt README.md README_cn.md sha256sum.txt) do (
+    for %%i in ( %_zip_list% ) do (
         if exist %%i ( del .\%%i && echo  * Deleted "%root%\dist\%%i" )
     )
     echo.
@@ -51,7 +63,7 @@ echo  * Clean completed.
 rem ================= STEP 3: Build =================
 
 
-cd repository
+pushd repository
 
 :: First, move out the original `__init__.py` from "you_get.extractors",
 ::     in order that we can recover everything after build.
@@ -85,12 +97,13 @@ for /f "delims=" %%i in ('dir /b /a-d _extractors') do (
 )
 move __init__.py you-get\src\you_get\extractors\ > NUL
 
-cd ..\build
+pushd ..\build
 if exist file_version_info.txt (
     call :echo_hrd
     pyi-set_version file_version_info.txt ..\dist\you-get.exe
 )
-cd ..
+
+popd & popd
 
 call :echo_hrd
 echo  * Build logs saved in:       "%root%\build\you-get\"
@@ -98,7 +111,20 @@ echo  * Build executable saved to: "%root%\dist\you-get.exe"
 echo  * Build completed.
 
 
-rem ================= STEP 4: Checksum =================
+rem ================= STEP 4: Copy =================
+
+
+call :echo_title "Copy the required files"
+
+xcopy /Y repository\you-get\LICENSE.txt dist\ >NUL
+xcopy /Y README.md dist\ >NUL
+xcopy /Y README_cn.md dist\ >NUL
+
+echo  * All the required files are now in: "%root%\dist\you-get.exe"
+echo  * Copy completed.
+
+
+rem ================= STEP 5: Checksum =================
 
 
 call :echo_title "SHA256 Checksum of "you-get.exe""
@@ -120,18 +146,10 @@ echo  * Checksum file saved to: "%root%\dist\sha256sum.txt"
 echo  * Checksum completed.
 
 
-rem ================= STEP 5: Zip =================
+rem ================= STEP 6: Zip =================
 
 
 call :echo_title "zip "you-get.zip""
-
-:: copy the files to be zipped
-xcopy /Y repository\you-get\LICENSE.txt dist\ >NUL
-xcopy /Y README.md dist\ >NUL
-xcopy /Y README_cn.md dist\ >NUL
-
-if NOT exist bin\zip.exe goto :no_zip_exe
-if NOT exist bin\bzip2.dll goto :no_zip_exe
 
 :: Get the version of you-get, arch of executable, and build date tag
 ::   -->  %_version%, %_arch%, %_date%
@@ -147,14 +165,15 @@ set "_date=%_LDT:~2,2%%_LDT:~4,2%%_LDT:~6,2%"
 set "_zip_archive=you-get_%_version%_win%_arch%_UB%_date%.zip"
 
 cd dist
-..\bin\zip.exe %_zip_archive% you-get.exe LICENSE.txt README.md README_cn.md sha256sum.txt -z < LICENSE.txt
+:: Zip all the required files
+..\bin\zip.exe %_zip_archive% %_zip_list% -z < LICENSE.txt
 
 call :echo_hrd
 echo  * Zip archive file saved to: "%root%\dist\%_zip_archive%"
 echo  * Zip completed.
 
 
-rem ================= STEP 6: Finish =================
+rem ================= STEP 99: Finish =================
 
 
 call :echo_end "All completed."
@@ -165,10 +184,14 @@ exit /b 0
 rem ================= FUNCTIONS =================
 
 
-:no_zip_exe
+:no_exe
 echo.
-echo  * Please download "zip.exe" and "bzip2.dll", and put them into "bin/".
-pause > NUL
+if NOT "%~1"=="" (
+    echo  ! "%~1" NOT found.
+) else (
+    echo  * Please download the above tool^(s^), and put it/them into "bin/".
+    pause > NUL
+)
 exit /b 1
 
 
