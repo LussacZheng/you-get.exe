@@ -1,7 +1,7 @@
 @rem - Encoding:utf-8; Mode:Batch; Language:en; LineEndings:CRLF -
 :: You-Get Unofficial Build Executable for Windows
 :: Author: Lussac (https://blog.lussac.net)
-:: Last updated: 2020-11-19
+:: Last updated: 2021-01-30
 :: >>> Get updated from: https://github.com/LussacZheng/you-get.exe <<<
 :: >>> EDIT AT YOUR OWN RISK. <<<
 @echo off
@@ -36,7 +36,7 @@ call :echo_title "Clean before building"
 if exist build\you-get\ rd /S /Q build\you-get
 if exist dist\ (
     pushd dist
-    for %%i in ( you-get.exe LICENSE.txt README.md README_cn.md ) do (
+    for %%i in ( you-get.exe LICENSE.txt README.md README_cn.md sha256sum.txt) do (
         if exist %%i ( del .\%%i && echo  * Deleted "%root%\dist\%%i" )
     )
     echo.
@@ -98,7 +98,29 @@ echo  * Build executable saved to: "%root%\dist\you-get.exe"
 echo  * Build completed.
 
 
-rem ================= STEP 4: Zip =================
+rem ================= STEP 4: Checksum =================
+
+
+call :echo_title "SHA256 Checksum of "you-get.exe""
+
+pushd dist
+for /f "usebackq skip=1 delims=" %%i in (`certutil -hashfile you-get.exe SHA256`) do (
+    set "_hash_result=%%i"
+    goto :checksum_next
+)
+:checksum_next
+echo %_hash_result% *you-get.exe> sha256sum.txt
+:: Use `echo %_hash_result% | clip` will cause an additional whitespace and one more line.
+set /p "_hash_trimSpace=%_hash_result%" < NUL | clip
+popd
+
+echo  * SHA256 Checksum: %_hash_result%
+echo  * SHA256 Checksum has been copied into your clipboard.
+echo  * Checksum file saved to: "%root%\dist\sha256sum.txt"
+echo  * Checksum completed.
+
+
+rem ================= STEP 5: Zip =================
 
 
 call :echo_title "zip "you-get.zip""
@@ -125,14 +147,14 @@ set "_date=%_LDT:~2,2%%_LDT:~4,2%%_LDT:~6,2%"
 set "_zip_archive=you-get_%_version%_win%_arch%_UB%_date%.zip"
 
 cd dist
-..\bin\zip.exe %_zip_archive% you-get.exe LICENSE.txt README.md README_cn.md -z < LICENSE.txt
+..\bin\zip.exe %_zip_archive% you-get.exe LICENSE.txt README.md README_cn.md sha256sum.txt -z < LICENSE.txt
 
 call :echo_hrd
 echo  * Zip archive file saved to: "%root%\dist\%_zip_archive%"
 echo  * Zip completed.
 
 
-rem ================= STEP 5: Finish =================
+rem ================= STEP 6: Finish =================
 
 
 call :echo_end "All completed."
