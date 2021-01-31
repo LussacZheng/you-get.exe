@@ -17,3 +17,12 @@
   Source:     https://sourceforge.net/projects/gnuwin32/files/bzip2/1.0.5/
   From:       "bzip2-1.0.5-bin.zip" \bin\bzip2.dll
   ```
+
+- `dos2unix.exe`
+
+  ```text
+  Version:    v7.4.2
+  SHA256:     5638c2b173ded31d2ed663725817863e2970148469762db537444c624a905c03
+  Source:     https://sourceforge.net/projects/dos2unix/files/dos2unix/7.4.2/
+  From:       "dos2unix-7.4.2-win32.zip" \bin\dos2unix.exe
+  ```

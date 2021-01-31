@@ -1,7 +1,7 @@
 @rem - Encoding:utf-8; Mode:Batch; Language:en; LineEndings:CRLF -
 :: You-Get Unofficial Build Executable for Windows
 :: Author: Lussac (https://blog.lussac.net)
-:: Last updated: 2021-01-30
+:: Last updated: 2021-01-31
 :: >>> Get updated from: https://github.com/LussacZheng/you-get.exe <<<
 :: >>> EDIT AT YOUR OWN RISK. <<<
 @echo off
@@ -17,7 +17,8 @@ set "root=%root:~0,-1%"
 cd "%root%"
 
 :: Set a list of required files
-set "_bin_list=bzip2.dll zip.exe"
+set "_bin_list=bzip2.dll dos2unix.exe zip.exe"
+set "_dos2unix_list=LICENSE.txt README.md README_cn.md sha256sum.txt"
 set "_zip_list=you-get.exe LICENSE.txt README.md README_cn.md sha256sum.txt"
 
 
@@ -146,7 +147,22 @@ echo  * Checksum file saved to: "%root%\dist\sha256sum.txt"
 echo  * Checksum completed.
 
 
-rem ================= STEP 6: Zip =================
+rem ================= STEP 6: CRLF to LF =================
+
+
+call :echo_title "Convert line endings to LF"
+
+pushd dist
+for %%i in ( %_dos2unix_list% ) do (
+    ..\bin\dos2unix.exe %%i
+)
+popd
+
+call :echo_hrd
+echo  * Convert completed.
+
+
+rem ================= STEP 7: Zip =================
 
 
 call :echo_title "zip "you-get.zip""
