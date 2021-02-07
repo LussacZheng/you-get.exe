@@ -78,7 +78,8 @@ from .vine import *
 from .vk import *
 from .w56 import *
 from .wanmen import *
-from .xiami import *
+# https://github.com/soimort/you-get/commit/8b473e725662bfff520d27c2eb1589d46fcafda5
+# from .xiami import *
 from .xinpianchang import *
 # https://github.com/soimort/you-get/compare/v0.4.1488...v0.4.1500#diff-643b8c5ae70162392985398dc3063176769d811c51b8eaea8f3f3722bdf80278L83
 # from .yinyuetai import *
