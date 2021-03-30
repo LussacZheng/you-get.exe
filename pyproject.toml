@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "you-get.exe"
+version = "0.1.0"
+description = "You-Get unofficial build executable for Windows"
+authors = ["Lussac Zheng <lussaczheng@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pyinstaller = "^4.0"
+
+[[tool.poetry.source]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+default = true
+
+[[tool.poetry.source]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple/"
+secondary = true
+
+[[tool.poetry.source]]
+name = "douban"
+url = "https://pypi.doubanio.com/simple/"
+secondary = true
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

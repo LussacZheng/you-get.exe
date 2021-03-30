@@ -1,17 +1,22 @@
-# You-Get repository from `git clone`
+# Editor
+.idea
+.vscode
+
+# Used for test when coding
+.test*/
+
+# Project
+__pycache__
+.venv
+## devscripts
+devscripts/use-proxy.settings
+## You-Get repository from `git clone`
 repository/you-get/
 
 # PyInstaller
 *.spec
 build/you-get/
 build/file_version_info.txt
-
-# devscripts
-devscripts/use-proxy.settings
-
-# Built files
-dist/you-get.exe
-dist/LICENSE.txt
 ## Ignore every file in "dist/" except "dist/released/.gitkeep"
 dist/*
 !dist/released/
