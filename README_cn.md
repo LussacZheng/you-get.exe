@@ -88,6 +88,12 @@ $ git clone https://github.com/LussacZheng/you-get.exe.git
 
 ---
 
+## TODO
+
+- [ ] 引入 [Poetry](https://github.com/python-poetry/poetry) 用于依赖管理。
+- [ ] 用 Python 重写 `build.bat` 。 _(maybe)_
+- [ ] 使用 GitHub Action 进行构建和发布。
+
 ## License
 
 [You-Get](https://github.com/soimort/you-get) is originally distributed under the [MIT license](https://github.com/soimort/you-get/blob/develop/LICENSE.txt).

@@ -87,6 +87,12 @@ See more information in [**doc**](https://github.com/LussacZheng/you-get.exe/tre
 
 ---
 
+## TODO
+
+- [ ] Introduce [Poetry](https://github.com/python-poetry/poetry) for dependency management.
+- [ ] Rewrite `build.bat` with Python. _(maybe)_
+- [ ] Use GitHub Action to build and release.
+
 ## License
 
 [You-Get](https://github.com/soimort/you-get) is originally distributed under the [MIT license](https://github.com/soimort/you-get/blob/develop/LICENSE.txt).
