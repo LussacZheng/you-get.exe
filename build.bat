@@ -132,11 +132,15 @@ rem ================= STEP 5: Checksum =================
 call :echo_title "SHA256 Checksum of "you-get.exe""
 
 pushd dist
-for /f "usebackq skip=1 delims=" %%i in (`certutil -hashfile you-get.exe SHA256`) do (
+:: Remove unnecessary whitespace from the hash value.
+::   This is for the compatibility with Windows 7 (32-bit),
+::       since the output of "certutil -hashfile *" on 32-bit Win7 is in the format of:
+::       xx xx xx xx xx ... xx xx xx xx
+::   And "Get-FileHash" is not available in PowerShell 2.0 :
+::       powershell -command "(Get-FileHash you-get.exe -Algorithm SHA256).Hash.ToLower()"
+for /f "usebackq" %%i in (`powershell -command "(certutil -hashfile you-get.exe SHA256 | Select-Object -Skip 1 -First 1) -replace ' '"`) do (
     set "_hash_result=%%i"
-    goto :checksum_next
 )
-:checksum_next
 echo %_hash_result% *you-get.exe> sha256sum.txt
 :: Use `echo %_hash_result% | clip` will cause an additional whitespace and one more line.
 set /p "_hash_trimSpace=%_hash_result%" < NUL | clip
