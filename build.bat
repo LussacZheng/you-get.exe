@@ -79,6 +79,7 @@ call :echo_title "pyinstaller "you-get""
 
 :: PyInstaller bundle command - START
 pyinstaller -F --path=src ^
+    --noupx ^
     --distpath ..\..\dist ^
     --workpath ..\..\build ^
     --specpath ..\..\build ^
