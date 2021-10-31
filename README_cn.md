@@ -61,7 +61,7 @@ $ git clone https://github.com/LussacZheng/you-get.exe.git
 项目中有若干批处理脚本，根据下文依次点击运行即可：
 
 1. 运行 `devscripts/init.bat` 。  
-   （即通过 `git clone` 来克隆 you-get 项目仓库。如果需要在 clone 时使用代理，请参照示例文件编辑 `devscripts/use-proxy.settings` 。）
+   （即通过 `git clone` 来克隆 you-get 项目仓库。如果需要在 clone 时使用代理，请参照示例文件编辑 `devscripts/use-proxy.conf` 。）
 2. 初始化完成后，运行 `build.bat` 。
 3. 打包好的可执行文件在 `dist/` 文件夹下。
 
@@ -78,7 +78,7 @@ $ git clone https://github.com/LussacZheng/you-get.exe.git
    *若 You-Get 修改了 [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) 而我尚未及时跟进并提交，你需要参照 [此处](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) 手动修改 `repository/_extractors/__init__.py` 。*
 
 2. 运行 `devscripts/update.bat` 。  
-   （该脚本也会从 `devscripts/use-proxy.settings` 中读取代理设置）
+   （该脚本也会从 `devscripts/use-proxy.conf` 中读取代理设置）
 3. 运行 `build.bat`.
 4. 打包好的可执行文件在 `dist/` 文件夹下。
 

@@ -60,7 +60,7 @@ $ git clone https://github.com/LussacZheng/you-get.exe.git
 There are several batchfiles, just click them by the following order:
 
 1. Run `devscripts/init.bat` .  
-   (It will clone the you-get repository by `git clone` . If you want to use proxy when cloning, edit `devscripts/use-proxy.settings` according to the sample.)
+   (It will clone the you-get repository by `git clone` . If you want to use proxy when cloning, edit `devscripts/use-proxy.conf` according to the sample.)
 2. After initialization, run `build.bat` .
 3. Find the executable in `dist/` folder.
 
@@ -77,7 +77,7 @@ To re-build after the new release of You-Get:
    *If You-Get modified the [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) and I have not followed up and submitted in time, you need to manually edit `repository/_extractors/__init__.py` according to [this](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) .*
 
 2. Run `devscripts/update.bat` .  
-   (It also reads the proxy settings from `devscripts/use-proxy.settings` )
+   (It also reads the proxy settings from `devscripts/use-proxy.conf` )
 3. Run `build.bat`.
 4. Find the executable in `dist/` folder.
 

@@ -2,8 +2,8 @@
 @echo off
 echo.
 
-:: Read the configuration file: "./use-proxy.settings"
-set "_config=%~dp0%~n0.settings"
+:: Read the configuration file: "./use-proxy.conf"
+set "_config=%~dp0%~n0.conf"
 if NOT exist %_config% (
     echo # EDIT AT YOUR OWN RISK.>%_config%
     echo.>>%_config%

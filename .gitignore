@@ -9,7 +9,7 @@
 __pycache__
 .venv
 ## devscripts
-devscripts/use-proxy.settings
+devscripts/use-proxy.conf
 devscripts/you-get.exe.zip
 ## You-Get repository from `git clone`
 repository/you-get/
