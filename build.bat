@@ -78,12 +78,15 @@ pushd you-get
 call :echo_title "pyinstaller "you-get""
 
 :: PyInstaller bundle command - START
+::     For PyInstaller 4.6,  use `--icon ..\build\you-get.ico`;
+::                     4.10, use `--icon you-get.ico`;
+::                     5.0,  DO NOT use 5.0
 pyinstaller -F --path=src ^
     --noupx ^
     --distpath ..\..\dist ^
     --workpath ..\..\build ^
     --specpath ..\..\build ^
-    --icon ..\build\you-get.ico ^
+    --icon you-get.ico ^
     --hidden-import=you_get.extractors ^
     --hidden-import=you_get.cli_wrapper ^
     --hidden-import=you_get.processor ^

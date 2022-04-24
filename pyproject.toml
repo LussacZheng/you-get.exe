@@ -8,7 +8,7 @@ authors = ["Lussac Zheng <lussaczheng@gmail.com>"]
 python = ">=3.7,<3.11"
 
 [tool.poetry.dev-dependencies]
-pyinstaller = "^4.0"
+pyinstaller = "^4.0, !=5.0"
 
 [[tool.poetry.source]]
 name = "tsinghua"
