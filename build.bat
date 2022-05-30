@@ -1,7 +1,7 @@
 @rem - Encoding:utf-8; Mode:Batch; Language:en; LineEndings:CRLF -
 :: You-Get Unofficial Build Executable for Windows
 :: Author: Lussac (https://blog.lussac.net)
-:: Last updated: 2021-01-31
+:: Last updated: 2022-05-30
 :: >>> Get updated from: https://github.com/LussacZheng/you-get.exe <<<
 :: >>> EDIT AT YOUR OWN RISK. <<<
 @echo off

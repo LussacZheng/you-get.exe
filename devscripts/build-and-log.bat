@@ -18,6 +18,7 @@ for /f %%i in ('WMIC OS GET LocalDateTime ^| find "."') do ( set "_LDT=%%i" )
 set "_date=%_LDT:~2,2%%_LDT:~4,2%%_LDT:~6,2%"
 set "_log=.\dist\you-get_%_version%_win%_arch%_UB%_date%.log"
 
+if NOT exist .\dist\ md dist
 if exist %_log% del %_log%
 
 

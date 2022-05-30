@@ -16,6 +16,7 @@ zip -r %_output% ^
     bin/zip.exe ^
     build/file_version_info.txt ^
     build/you-get.ico ^
+    devscripts/build-and-log.bat ^
     repository/ ^
     build.bat ^
     poetry.lock poetry.toml pyproject.toml ^
