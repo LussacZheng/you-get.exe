@@ -103,7 +103,8 @@ call :echo_title "pyinstaller "you-get""
 :: PyInstaller bundle command - START
 ::     For PyInstaller 4.6,  use `--icon ..\build\you-get.ico`;
 ::                     4.10, use `--icon you-get.ico`;
-::                     5.0,  DO NOT use 5.0
+::                     5.0,  DO NOT use 5.0;
+::                     ^5.1, use `--icon you-get.ico`;
 pyinstaller -F --path=src ^
     --noupx ^
     --distpath ..\..\dist ^
