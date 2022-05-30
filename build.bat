@@ -5,7 +5,7 @@
 :: >>> Get updated from: https://github.com/LussacZheng/you-get.exe <<<
 :: >>> EDIT AT YOUR OWN RISK. <<<
 @echo off
-setlocal
+setlocal EnableDelayedExpansion
 
 
 rem ================= STEP 0: Init =================
@@ -21,6 +21,12 @@ set "_bin_list=bzip2.dll dos2unix.exe zip.exe"
 set "_dos2unix_list=LICENSE.txt README.md README_cn.md sha256sum.txt"
 set "_zip_list=you-get.exe LICENSE.txt README.md README_cn.md sha256sum.txt"
 
+:: Check options
+:CheckOpts
+if "%~1"=="-f" ( set "FORCE_DELETE=1" ) & shift & goto :CheckOpts
+if "%~1"=="--no-pause" ( set "NO_PAUSE=1" ) & shift & goto :CheckOpts
+if "%~1"=="--skip-build" ( set "SKIP_BUILD=1" ) & shift & goto :CheckOpts
+
 
 rem ================= STEP 1: Check =================
 
@@ -28,7 +34,7 @@ rem ================= STEP 1: Check =================
 if NOT exist repository\you-get\you-get (
     echo.
     echo  * Please run "devscripts\init.bat" first or clone the repository of "you-get".
-    pause > NUL
+    call :conditional_pause
     exit /b 1
 )
 
@@ -50,10 +56,25 @@ if exist build\you-get\ rd /S /Q build\you-get
 if exist dist\ (
     pushd dist
     for %%i in ( %_zip_list% ) do (
-        if exist %%i ( del .\%%i && echo  * Deleted "%root%\dist\%%i" )
+        if exist %%i (
+            if NOT "%SKIP_BUILD%"=="1" (
+                del .\%%i && echo  * Deleted "%root%\dist\%%i"
+            ) else (
+                if NOT "%%i"=="you-get.exe" (
+                    del .\%%i && echo  * Deleted "%root%\dist\%%i"
+                )
+            )
+        )
     )
-    echo.
-    if exist you-get*win*UB*.zip del /P .\you-get*win*UB*.zip
+    if exist you-get*win*UB*.zip (
+        if NOT "%FORCE_DELETE%"=="1" (
+            echo.
+            del /P .\you-get*win*UB*.zip
+        ) else (
+            for /f "delims=" %%i in ('dir /b /a:a /o:d .\you-get*win*UB*.zip') do ( set "_old_zip=%%i" )
+            del .\you-get*win*UB*.zip && echo  * Deleted "%root%\dist\!_old_zip!"
+        )
+    )
     popd
 )
 
@@ -63,6 +84,8 @@ echo  * Clean completed.
 
 rem ================= STEP 3: Build =================
 
+
+if "%SKIP_BUILD%"=="1" goto :end_of_build
 
 pushd repository
 
@@ -115,6 +138,12 @@ echo  * Build logs saved in:       "%root%\build\you-get\"
 echo  * Build executable saved to: "%root%\dist\you-get.exe"
 echo  * Build completed.
 
+:end_of_build
+if "%SKIP_BUILD%"=="1" (
+    call :echo_title "Skip building"
+    echo  * Build Skipped.
+)
+
 
 rem ================= STEP 4: Copy =================
 
@@ -125,7 +154,7 @@ xcopy /Y repository\you-get\LICENSE.txt dist\ >NUL
 xcopy /Y README.md dist\ >NUL
 xcopy /Y README_cn.md dist\ >NUL
 
-echo  * All the required files are now in: "%root%\dist\you-get.exe"
+echo  * All the required files are now in: "%root%\dist\"
 echo  * Copy completed.
 
 
@@ -201,7 +230,7 @@ rem ================= STEP 99: Finish =================
 
 
 call :echo_end "All completed."
-pause
+call :conditional_pause withHint
 exit /b 0
 
 
@@ -214,9 +243,19 @@ if NOT "%~1"=="" (
     echo  ! "%~1" NOT found.
 ) else (
     echo  * Please download the above tool^(s^), and put it/them into "bin/".
-    pause > NUL
+    call :conditional_pause
 )
 exit /b 1
+
+
+:conditional_pause
+if "%NO_PAUSE%"=="1" goto :eof
+if "%~1"=="withHint" (
+    pause
+) else (
+    pause > NUL
+)
+goto :eof
 
 
 :echo_title
