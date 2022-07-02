@@ -1,7 +1,7 @@
 @rem - Encoding:utf-8; Mode:Batch; Language:en; LineEndings:CRLF -
 :: You-Get Unofficial Build Executable for Windows
 :: Author: Lussac (https://blog.lussac.net)
-:: Last updated: 2022-05-30
+:: Last updated: 2022-07-02
 :: >>> Get updated from: https://github.com/LussacZheng/you-get.exe <<<
 :: >>> EDIT AT YOUR OWN RISK. <<<
 @echo off
@@ -91,8 +91,8 @@ pushd repository
 
 :: First, move out the original `__init__.py` from "you_get.extractors",
 ::     in order that we can recover everything after build.
-:: Then copy all the extractors from `repository\_extractors\`, with a new `__init__.py`
-::     which has imported these extractors, into the module "you_get.extractors"
+:: Then copy a new `__init__.py`, which has imported the missing extractors,
+::     into the module "you_get.extractors".
 move you-get\src\you_get\extractors\__init__.py .\ > NUL
 xcopy _extractors\*.py you-get\src\you_get\extractors\ >NUL
 

@@ -78,11 +78,7 @@ from .vine import *
 from .vk import *
 from .w56 import *
 from .wanmen import *
-# https://github.com/soimort/you-get/commit/8b473e725662bfff520d27c2eb1589d46fcafda5
-# from .xiami import *
 from .xinpianchang import *
-# https://github.com/soimort/you-get/compare/v0.4.1488...v0.4.1500#diff-643b8c5ae70162392985398dc3063176769d811c51b8eaea8f3f3722bdf80278L83
-# from .yinyuetai import *
 from .yixia import *
 from .youku import *
 from .youtube import *
@@ -97,23 +93,14 @@ from .giphy import *
 from .huomaotv import *
 from .iwara import *
 from .ixigua import *
+from .lrts import *
 from .missevan import *
 from .qie_video import *
 from .qq_egame import *
 from .toutiao import *
-# https://github.com/soimort/you-get/compare/v0.4.1410...v0.4.1423#diff-64007456936a8456d40ebe74263b851b
-# from .vidto import *
 from .ximalaya import *
 from .yizhibo import *
 
-# Copy these files from "you-get-0.4.1403.tar.gz"
-from ._blip import *
-from ._catfun import *
-from ._coursera import *
-from ._dongting import *
-from ._jpopsuki import *
-from ._qianmo import *
-from ._songtaste import *
-from ._thvideo import *
-from ._vid48 import *
-from ._videobam import *
+# `embed` and `universal` have been imported by other submodules.
+# from .embed import *
+# from .universal import *
