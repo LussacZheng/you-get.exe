@@ -21,7 +21,8 @@ zip -r %_output% ^
     build.bat ^
     poetry.lock poetry.toml pyproject.toml ^
     README.md README_cn.md ^
-    -x "repository/you-get/.git/*"
+    -x "repository/you-get/.git/*" ^
+    -x "*__pycache__*"
 
 move %_output% devscripts\
 
