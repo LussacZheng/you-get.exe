@@ -11,14 +11,11 @@ if exist %_output% del /P .\%_output%
 pushd ..
 
 zip -r %_output% ^
-    bin/bzip2.dll ^
-    bin/dos2unix.exe ^
-    bin/zip.exe ^
-    build/file_version_info.txt ^
+    build/file_version_info.tmpl ^
     build/you-get.ico ^
     devscripts/build-and-log.bat ^
     repository/ ^
-    build.bat ^
+    build.py ^
     poetry.lock poetry.toml pyproject.toml ^
     README.md README_cn.md ^
     -x "repository/you-get/.git/*" ^

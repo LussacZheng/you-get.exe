@@ -101,7 +101,7 @@ See more information in [**doc**](https://github.com/LussacZheng/you-get.exe/tre
 ## TODO
 
 - [x] Introduce [Poetry](https://github.com/python-poetry/poetry) for dependency management.
-- [ ] Rewrite `build.bat` with Python. _(maybe)_
+- [x] Rewrite `build.bat` with Python.
 - [ ] Use GitHub Action to build and release.
 
 ## License

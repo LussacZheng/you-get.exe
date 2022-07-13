@@ -109,7 +109,7 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 ## TODO
 
 - [x] 引入 [Poetry](https://github.com/python-poetry/poetry) 用于依赖管理。
-- [ ] 用 Python 重写 `build.bat` 。 _(maybe)_
+- [x] 用 Python 重写 `build.bat` 。
 - [ ] 使用 GitHub Action 进行构建和发布。
 
 ## License
