@@ -1,16 +1,16 @@
 @rem - Encoding:utf-8; Mode:Batch; Language:en; LineEndings:CRLF -
 @echo off
+setlocal
 
 :: Set the root directory
 pushd "%~dp0"
-
-set "_output=you-get.exe.zip"
-
-if exist %_output% del /P .\%_output%
-
 pushd ..
 
-zip -r %_output% ^
+set "output=devscripts\you-get.exe.zip"
+
+if exist %output% del /P .\%output%
+
+zip -r %output% ^
     build/file_version_info.tmpl ^
     build/you-get.ico ^
     devscripts/build-and-log.bat ^
@@ -21,6 +21,7 @@ zip -r %_output% ^
     -x "repository/you-get/.git/*" ^
     -x "*__pycache__*"
 
-move %_output% devscripts\
+echo. & echo  * Zip file saved in: "%cd%\%output%"
 
 popd & popd
+endlocal
