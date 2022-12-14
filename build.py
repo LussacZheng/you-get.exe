@@ -2,43 +2,21 @@
 # -*- coding: utf-8 -*-
 
 import glob
-import hashlib
-import os.path
-import platform
+import os
 import re
 import shutil
 import sys
-import time
-import zipfile
 from enum import Enum, unique
 
 import PyInstaller.__main__
 
-ROOT = os.path.split(os.path.realpath(__file__))[0]
+from scripts import utils
+from scripts.artifact import ArtifactInfo
+from scripts.utils import path_resolve, py_arch, py_version, date, date_tuple
 
+ROOT = os.path.dirname(os.path.realpath(__file__))
 
 # region ########## Util Functions ##########
-
-
-def join_and_norm(base: str, *paths: str) -> str:
-    """Return the normalized path after joining the two paths.
-
-    For example, join_and_norm("a/b/c", "..\\d\\.\\e.txt", "../../f/g.jpg" == "a/b/f/g.jpg".
-    """
-
-    return os.path.normpath(os.path.join(base, *paths))
-
-
-def sha256sum(file_path: str) -> str:
-    """Return the SHA-256 checksum of input file.
-
-    :return: empty string if the `path` is not an existing regular file.
-    """
-
-    if not os.path.isfile(file_path):
-        return ""
-    with open(file_path, "rb") as f:
-        return hashlib.sha256(f.read()).hexdigest()
 
 
 # Don't use this variable directly, use `version()` instead.
@@ -55,7 +33,7 @@ def version() -> str:
         # Whether the version number is actually found, set to it True
         __ver_found = True
         # Try to get version string from `src/you_get/version.py`
-        version_file = join_and_norm(ROOT, "repository/you-get/src/you_get/version.py")
+        version_file = path_resolve(ROOT, "repository/you-get/src/you_get/version.py")
         if os.path.isfile(version_file):
             with open(version_file, "r", encoding="utf-8") as f:
                 res = re.search(r"version.*'([\d.]+)'", f.read())
@@ -72,61 +50,6 @@ def version_tuple() -> tuple:
     while len(v) < 4:
         v.append(0)
     return tuple(v)
-
-
-def date() -> str:
-    """Return current date in the format of `%y%m%d`."""
-
-    return time.strftime("%y%m%d", time.localtime())
-
-
-def date_tuple() -> str:
-    """Return current date in the format of zero-trimmed `(%Y, %#m, %#d)`."""
-
-    return time.strftime("(%Y, %#m, %#d, 0)", time.localtime())
-
-
-def py_arch() -> str:
-    """Get the architecture of the python interpreter ("32" or "64")
-
-    Return the arch of the python interpreter currently in use.
-    Note that if you are using a 32-bit python interpreter on 64-bit Windows, you will get "32".
-    """
-
-    return platform.architecture()[0].rstrip("bit")
-
-
-def crlf_to_lf(file_path: str):
-    """Convert the line endings of the input file from CRLF to LF.
-
-    Note: this works in-place, which means it will overwrite the original file.
-    """
-
-    with open(file_path, "rb") as f:
-        content = f.read()
-    content = content.replace(b"\r\n", b"\n")
-    with open(file_path, "wb") as f:
-        f.write(content)
-
-
-def compress_files(output_name: str, base_dir: str, file_list: list, comment: str = ""):
-    """Compress all the files of `file_list` inside the `base_dir`, into a ZIP archive.
-
-    :param output_name: Filename of the output ZIP archive
-    :param base_dir: Root directory as the prefix for `file_list`
-    :param file_list: A list of filenames inside the `base_dir`
-    :param comment: The comment string to be written into the ZIP file. If a path to text file
-        is provided, the contents of that file are used instead.
-    """
-
-    with zipfile.ZipFile(output_name, "w", zipfile.ZIP_DEFLATED) as z:
-        for file in file_list:
-            z.write(os.path.join(base_dir, file), arcname=file)
-        if os.path.isfile(comment):
-            with open(comment, "r", encoding="utf-8") as f:
-                z.comment = f.read().encode("utf-8")
-        else:
-            z.comment = comment.encode("utf-8")
 
 
 @unique
@@ -169,8 +92,10 @@ class EchoStyle(Enum):
 # region ########## Config ##########
 
 DIST = os.path.join(ROOT, "dist")
-BUILD = os.path.join(ROOT, "build")
+STATIC = os.path.join(ROOT, "build")
+TEMP = os.path.join(ROOT, ".temp")
 ENTRY_POINT = "repository/you-get/you-get"
+DIST_FILENAME = f"you-get_{version()}_win{py_arch()}_py{py_version()}_UB{date()}.zip"
 
 CONFIG = {
     "dist": {
@@ -178,9 +103,10 @@ CONFIG = {
         "path": os.path.join(DIST, "you-get.exe"),
     },
     "build": {
-        "products": os.path.join(BUILD, "you-get"),
-        "version_info_tmpl": os.path.join(BUILD, "file_version_info.tmpl"),
-        "version_info": os.path.join(BUILD, "file_version_info.txt"),
+        "products": os.path.join(TEMP, "you-get"),
+        "version_info_tmpl": os.path.join(STATIC, "file_version_info.tmpl"),
+        "version_info": os.path.join(TEMP, "file_version_info.txt"),
+        "artifact_info": os.path.join(TEMP, "artifact_info.json"),
     },
     "copy": [
         ("repository/you-get/LICENSE.txt", "LICENSE.txt"),
@@ -190,7 +116,7 @@ CONFIG = {
     "sha256sum": os.path.join(DIST, "sha256sum.txt"),
     "crlf2lf": ["LICENSE.txt", "README.md", "README_cn.md", "sha256sum.txt"],
     "zip": {
-        "path": os.path.join(DIST, f"you-get_{version()}_win{py_arch()}_UB{date()}.zip"),
+        "path": os.path.join(DIST, DIST_FILENAME),
         "list": ["you-get.exe", "LICENSE.txt", "README.md", "README_cn.md", "sha256sum.txt"],
         "comment": os.path.join(DIST, "LICENSE.txt"),
     },
@@ -225,7 +151,7 @@ def init():
 def check():
     """Step 1: Check"""
 
-    if not os.path.isfile(join_and_norm(ROOT, ENTRY_POINT)):
+    if not os.path.isfile(path_resolve(ROOT, ENTRY_POINT)):
         EchoStyle.Warn.echo('Please run "devscripts\\init.bat" first or clone the repository of "you-get".')
         sys.exit(1)
 
@@ -245,9 +171,8 @@ def clean():
     EchoStyle.Title.echo("Clean before building")
 
     # Clean last build products
-    build_dir = CONFIG["build"]["products"]
-    if os.path.exists(build_dir):
-        shutil.rmtree(build_dir)
+    if os.path.exists(TEMP):
+        shutil.rmtree(TEMP)
 
     # Clean last dist
     if os.path.exists(DIST):
@@ -272,6 +197,10 @@ def build():
         EchoStyle.Warn.echo("Build Skipped.")
         return
 
+    # create temp directory if necessary
+    if not os.path.exists(TEMP):
+        os.mkdir(TEMP)
+
     # Prepare `file_version_info.txt`
     src = CONFIG["build"]["version_info_tmpl"]
     dst = CONFIG["build"]["version_info"]
@@ -284,6 +213,7 @@ def build():
                 date_tuple=date_tuple(),
                 version=version(),
                 date=date(),
+                py_version=py_version(),
                 py_arch="64" if py_arch() == "64" else "86",
             ))
 
@@ -306,8 +236,8 @@ def build():
         PyInstaller.__main__.run([
             ENTRY_POINT,
             '--path=repository/you-get/src',
-            '--workpath=build',
-            '--specpath=build',
+            '--workpath=.temp',
+            '--specpath=.temp',
             '--distpath=dist',
             '--hidden-import=you_get.extractors',
             '--hidden-import=you_get.cli_wrapper',
@@ -315,7 +245,7 @@ def build():
             '--hidden-import=you_get.util',
             '-F',
             '--noupx',
-            '--icon=you-get.ico',
+            '--icon=../build/you-get.ico',
             '--version-file=file_version_info.txt'
         ])
     finally:
@@ -337,16 +267,16 @@ def copy():
     EchoStyle.Title.echo("Copy the required files")
     for src, dst in CONFIG["copy"]:
         EchoStyle.Running.echo(f'Copying "{src}" to "{dst}"...')
-        shutil.copy(join_and_norm(ROOT, src), os.path.join(DIST, dst))
+        shutil.copy(path_resolve(ROOT, src), os.path.join(DIST, dst))
     EchoStyle.Running.echo(f'All the required files are now in: "{DIST}"')
     EchoStyle.Complete.echo("Copy")
 
 
-def checksum():
+def checksum() -> str:
     """Step 5: Checksum"""
 
     EchoStyle.Title.echo('SHA256 Checksum of "you-get.exe"')
-    hash_value = sha256sum(CONFIG["dist"]["path"])
+    hash_value = utils.sha256sum(CONFIG["dist"]["path"])
     output = CONFIG["sha256sum"]
     with open(output, "w", encoding="utf-8") as f:
         f.write(f'{hash_value} *{CONFIG["dist"]["name"]}')
@@ -356,6 +286,8 @@ def checksum():
     EchoStyle.Running.echo(f'Checksum file saved to: "{output}"')
     EchoStyle.Complete.echo("Checksum")
 
+    return hash_value
+
 
 def convert_line_endings():
     """Step 6: CRLF to LF"""
@@ -363,7 +295,7 @@ def convert_line_endings():
     EchoStyle.Title.echo("Convert line endings to LF")
     for file in CONFIG["crlf2lf"]:
         EchoStyle.Running.echo(f'Converting "{file}"...')
-        crlf_to_lf(os.path.join(DIST, file))
+        utils.crlf_to_lf(os.path.join(DIST, file))
     EchoStyle.Complete.echo("Convert")
 
 
@@ -372,9 +304,21 @@ def package():
 
     EchoStyle.Title.echo('Generate "you-get.zip"')
     output = CONFIG["zip"]["path"]
-    compress_files(output, DIST, CONFIG["zip"]["list"], CONFIG["zip"]["comment"])
+    utils.compress_files(output, DIST, CONFIG["zip"]["list"], CONFIG["zip"]["comment"])
     EchoStyle.Running.echo(f'Zip archive file saved to:\n   "{output}"')
     EchoStyle.Complete.echo("Zip")
+
+
+def generate_artifact_info(sha256: str):
+    with open(CONFIG["build"]["artifact_info"], "w", encoding="utf-8") as f:
+        f.write(ArtifactInfo(
+            filename=DIST_FILENAME,
+            py_version=py_version(),
+            py_arch=py_arch(),
+            poetry_version=utils.poetry_version(),
+            pyinstaller_version=PyInstaller.__version__,
+            sha256=sha256
+        ).json())
 
 
 def finish():
@@ -392,9 +336,10 @@ def main():
     clean()
     build()
     copy()
-    checksum()
+    sha256 = checksum()
     convert_line_endings()
     package()
+    generate_artifact_info(sha256)
     finish()
     return
 

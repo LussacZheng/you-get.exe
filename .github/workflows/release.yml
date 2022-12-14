@@ -1,0 +1,83 @@
+name: Build you-get.exe
+
+on:
+  workflow_dispatch:
+    inputs:
+      you_get_tag:
+        description: "Tag name of the target you-get version"
+        required: true
+        default: "develop"
+        type: string
+      release_title:
+        description: "Title of this release"
+        required: true
+        default: "Unofficial Build {DATE} for {YOU_GET_VERSION}"
+        type: string
+
+jobs:
+  build:
+    name: "Bundle you-get for Windows"
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
+        arch: ["x86", "x64"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: "Checkout `you-get`"
+        uses: actions/checkout@v3
+        with:
+          repository: "soimort/you-get"
+          path: "repository/you-get"
+          ref: ${{ inputs.you_get_tag }}
+
+      - name: "Set up Python ${{ matrix.python-version }}"
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.arch }}
+
+      - name: "Setup poetry"
+        uses: Gr1N/setup-poetry@v7
+
+      - name: "Build you-get.exe"
+        shell: pwsh
+        run: |
+          poetry install
+          poetry run python build.py -f
+          Move-Item -Path .temp\artifact_info.json -Destination dist
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: you-get_py${{ matrix.python-version }}_${{ matrix.arch }}
+          path: |
+            dist/*.zip
+            dist/artifact_info.json
+
+  release:
+    name: "Create release"
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          path: .ci
+
+      - name: "Generate release notes"
+        env:
+          PYTHONPATH: .
+        run: |
+          python scripts/ci/release_notes.py
+
+      - name: "Release"
+        uses: softprops/action-gh-release@v1
+        with:
+          files: .ci/**/*.zip
+          draft: true
+          name: ${{ inputs.release_title }}
+          body_path: scripts/ci/release_notes.md

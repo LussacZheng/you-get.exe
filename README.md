@@ -65,7 +65,7 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 2. After initialization, run `build.bat` under virtualenv.
 
    ```shell
-   poetry run build.bat
+   poetry run python build.py
    ```
 
 3. Find the executable in `dist/` directory.
@@ -87,7 +87,7 @@ To re-build after the new release of You-Get:
 3. Re-run `build.bat` under virtualenv.
 
    ```shell
-   poetry run build.bat
+   poetry run python build.py
    ```
 
 4. Find the executable in `dist/` directory.
@@ -102,7 +102,7 @@ See more information in [**doc**](https://github.com/LussacZheng/you-get.exe/tre
 
 - [x] Introduce [Poetry](https://github.com/python-poetry/poetry) for dependency management.
 - [x] Rewrite `build.bat` with Python.
-- [ ] Use GitHub Action to build and release.
+- [x] Use GitHub Action to build and release.
 
 ## License
 

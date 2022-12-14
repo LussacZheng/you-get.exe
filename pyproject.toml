@@ -5,7 +5,7 @@ description = "You-Get unofficial build executable for Windows"
 authors = ["Lussac Zheng <lussaczheng@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.7,<3.11"
+python = ">=3.7.4,<3.12"
 
 [tool.poetry.dev-dependencies]
 pyinstaller = ">4.0, !=5.0"
@@ -13,7 +13,7 @@ pyinstaller = ">4.0, !=5.0"
 [[tool.poetry.source]]
 name = "tsinghua"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-default = true
+secondary = true
 
 [[tool.poetry.source]]
 name = "aliyun"

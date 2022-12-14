@@ -51,7 +51,7 @@ you-get -k --debug https://your.video/url/here
    python3 install-poetry.py
    ```
 
-- [Git](https://git-scm.com/) 
+- [Git](https://git-scm.com/)
 
 ### 获取此项目
 
@@ -73,7 +73,7 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 2. 初始化完成后，在虚拟环境中运行 `build.bat` 。
 
    ```shell
-   poetry run build.bat
+   poetry run python build.py
    ```
 
 3. 打包好的可执行文件为 `dist/` 文件夹下。
@@ -95,7 +95,7 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 3. 重新在虚拟环境中运行 `build.bat` 。
 
    ```shell
-   poetry run build.bat
+   poetry run python build.py
    ```
 
 4. 打包好的可执行文件在 `dist/` 文件夹下。
@@ -110,7 +110,7 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 
 - [x] 引入 [Poetry](https://github.com/python-poetry/poetry) 用于依赖管理。
 - [x] 用 Python 重写 `build.bat` 。
-- [ ] 使用 GitHub Action 进行构建和发布。
+- [x] 使用 GitHub Action 进行构建和发布。
 
 ## License
 

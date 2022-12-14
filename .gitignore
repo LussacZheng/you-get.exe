@@ -15,11 +15,12 @@ devscripts/you-get.exe.zip
 repository/you-get/
 
 # PyInstaller
-*.spec
-build/you-get/
-build/file_version_info.txt
+.temp
 ## Ignore every file in "dist/" except "dist/released/.gitkeep"
 dist/*
 !dist/released/
 dist/released/*
 !dist/released/.gitkeep
+
+## CI
+scripts/ci/release_notes.md
