@@ -4,7 +4,7 @@ setlocal
 
 :: Enter the root directory
 pushd "%~dp0"
-pushd ..
+cd ..\..
 
 if NOT exist .\dist\ md dist
 set "log=.\dist\you-get.logging"
@@ -21,5 +21,5 @@ move %log% %log2% > NUL
 echo  * All completed.
 echo  * Build logs saved in: "%cd%\%log2:.\=%"
 
-popd & popd
+popd
 endlocal

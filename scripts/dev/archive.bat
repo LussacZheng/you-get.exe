@@ -2,19 +2,19 @@
 @echo off
 setlocal
 
-:: Set the root directory
+:: Enter the root directory
 pushd "%~dp0"
-pushd ..
+cd ..\..
 
-set "output=devscripts\you-get.exe.zip"
+set "output=scripts\dev\you-get.exe.zip"
 
 if exist %output% del /P .\%output%
 
 zip -r %output% ^
     build/file_version_info.tmpl ^
     build/you-get.ico ^
-    devscripts/build-and-log.bat ^
     repository/ ^
+    scripts/dev/build-and-log.bat ^
     build.py ^
     poetry.lock poetry.toml pyproject.toml ^
     README.md README_cn.md ^
@@ -23,5 +23,5 @@ zip -r %output% ^
 
 echo. & echo  * Zip file saved in: "%cd%\%output%"
 
-popd & popd
+popd
 endlocal

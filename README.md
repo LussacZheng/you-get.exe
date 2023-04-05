@@ -38,10 +38,11 @@ See below if you want to bundle and build by yourself.
 
 The following dependencies are required and must be installed separately.
 
-- [Python 3.7-3.10](https://www.python.org/downloads/windows/)  
-   According to the [README](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms) of PyInstaller, the supported Python version is 3.7-3.10 now (Jan. 3rd, 2022). To create a 32-bit executable, run PyInstaller under a 32-bit Python.
+- [Python 3.7-3.11](https://www.python.org/downloads/windows/)  
+   You can find the supported Python versions in the [README](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms) of PyInstaller.
+   To create a 32-bit executable, run PyInstaller under a 32-bit Python.
 
-- [Poetry](https://github.com/python-poetry/poetry#installation)
+- [Poetry](https://python-poetry.org/docs/#installation)
 
 - [Git](https://git-scm.com/)
 
@@ -54,15 +55,15 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 ### Build for the first time
 
 1. Initialization
-    - Run `devscripts/init.bat` .  
-     (It will clone the you-get repository by `git clone` . If you want to use proxy when cloning, edit `devscripts/use-proxy.conf` according to the example.)
+    - Run `scripts/dev/prepare.bat` to clone repository `you-get`.  
+      *If you want to use proxy when cloning, edit `scripts/dev/use-proxy.conf` according to the example.*
     - Create virtualenv and install dependencies.
   
       ```shell
       poetry install
       ```
 
-2. After initialization, run `build.bat` under virtualenv.
+2. After initialization, run `build.py` under virtualenv.
 
    ```shell
    poetry run python build.py
@@ -74,23 +75,30 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 
 To re-build after the new release of You-Get:
 
-1. Make sure the scripts of this repository is up to date:
+1. Preparation
+    - Make sure the scripts of this repository is up to date.
 
-   ```shell
-   git pull
-   ```
+      ```shell
+      git pull
+      ```
 
-   *If You-Get modified the [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) and I have not followed up and submitted in time, you need to manually edit `repository/_extractors/__init__.py` according to [this](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) .*
+      *If You-Get modified the [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) and I have not followed up and submitted in time, you need to manually edit `repository/_extractors/__init__.py` according to [this](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) .*
 
-2. Run `devscripts/update.bat` .  
-   (It also reads the proxy settings from `devscripts/use-proxy.conf` )
-3. Re-run `build.bat` under virtualenv.
+    - Update dependencies.
+  
+      ```shell
+      poetry update
+      ```
+
+    - Run `scripts/dev/prepare.bat`, and enter <kbd>U</kbd> to update repository `you-get`.  
+
+2. Re-run `build.py` under virtualenv.
 
    ```shell
    poetry run python build.py
    ```
 
-4. Find the executable in `dist/` directory.
+3. Find the executable in `dist/` directory.
 
 ### More Information
 
