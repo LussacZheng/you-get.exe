@@ -8,16 +8,21 @@
 
 Building information of `you-get.exe` :
 
-| Filename <br> (Building Environment) | SHA-256 of `you-get.exe` |
-| :----------------------------------: | :----------------------: |
-{% for %}
-| {filename} <br> `(Python {py_version}_x{py_arch}, Poetry {poetry_version}, PyInstaller {pyinstaller_version})` | `{sha256}` |
-{% endfor %}
+> _Poetry ${poetry_version}, PyInstaller ${pyinstaller_version}_
+
+| Filename | SHA-256 of `you-get.exe` |
+| :------: | :----------------------: |
+{% main %}
+| <sub>${filename} _`(py${py_version})`_</sub> | <sub>${sha256}</sub> |
+{% main %}
+| - | - |
+{% artifact %}
+| <sub>${filename}</sub> | <sub>${sha256}</sub> |
+{% artifact %}
 
 ### Issues
 
 If something goes wrong when using the latest released executable, feel free to [start a new discussion](https://github.com/LussacZheng/you-get.exe/discussions) or [submit an issue](https://github.com/LussacZheng/you-get.exe/issues).
-If you don't have a GitHub account, leave a message in [this page](https://blog.lussac.net/archives/315/).
 You'd better attach the debug info. Get the detailed error report by adding the `--debug` option:
 
 ```shell

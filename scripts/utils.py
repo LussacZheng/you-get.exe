@@ -41,9 +41,23 @@ def date_tuple() -> str:
 
 
 def py_version() -> str:
-    """Get the version of current python interpreter `(major.minor.patch)`."""
+    """Get the version of current python interpreter `major.minor.patch`."""
 
     return platform.python_version()
+
+
+def py_version_strings_match(a: str, b: str) -> bool:
+    """Determine whether one of the two version strings matches the other."""
+
+    if (not a.startswith(b)) and (not b.startswith(a)):
+        return False
+    list_a = a.split(".")
+    list_b = b.split(".")
+    short, long = (list_a, list_b) if len(list_a) < len(list_b) else (list_b, list_a)
+    for (i, s) in enumerate(short):
+        if s != long[i]:
+            return False
+    return True
 
 
 def py_arch() -> str:

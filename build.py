@@ -313,11 +313,11 @@ def generate_artifact_info(sha256: str):
     with open(CONFIG["build"]["artifact_info"], "w", encoding="utf-8") as f:
         f.write(ArtifactInfo(
             filename=DIST_FILENAME,
+            sha256=sha256,
             py_version=py_version(),
             py_arch=py_arch(),
             poetry_version=utils.poetry_version(),
             pyinstaller_version=PyInstaller.__version__,
-            sha256=sha256
         ).json())
 
 

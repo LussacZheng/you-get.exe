@@ -22,5 +22,6 @@ dist/*
 dist/released/*
 !dist/released/.gitkeep
 
-## CI
+# CI
+.ci
 scripts/ci/release_notes.md

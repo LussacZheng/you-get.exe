@@ -1,18 +1,49 @@
 import json
+from abc import ABCMeta, abstractmethod
+from string import Template
 
 UNKNOWN = "unknown"
 
 
-class ArtifactInfo:
+class Info(metaclass=ABCMeta):
+    @abstractmethod
+    def inject_into(self, template: str) -> str:
+        raise NotImplementedError
 
-    def __init__(self, filename: str, py_version: str, py_arch: str, poetry_version: str, pyinstaller_version: str,
-                 sha256: str):
+
+class CoreInfo(Info):
+
+    def __init__(self, main_py_version: str, poetry_version: str, pyinstaller_version: str):
+        """
+        :param main_py_version: Note that version string starting with `py` is also valid (e.g. `py3.8`).
+        """
+        self.main_py_version = main_py_version[2:] if main_py_version.startswith("py") else main_py_version
+        self.poetry_version = poetry_version
+        self.pyinstaller_version = pyinstaller_version
+
+    def inject_into(self, template: str) -> str:
+        """Format the template string with data from this CoreInfo instance."""
+        return Template(template).safe_substitute(
+            poetry_version=self.poetry_version,
+            pyinstaller_version=self.pyinstaller_version,
+        )
+
+
+class ArtifactInfo(Info):
+
+    def __init__(self, filename: str, sha256: str, py_version: str, py_arch: str, poetry_version: str,
+                 pyinstaller_version: str):
         self.filename = filename
+        self.sha256 = sha256
+
         self.py_version = py_version
+
         self.py_arch = py_arch
         self.poetry_version = poetry_version
         self.pyinstaller_version = pyinstaller_version
-        self.sha256 = sha256
+
+    def __repr__(self):
+        return self.json()
 
     @classmethod
     def from_json_str(cls, info: str):
@@ -20,24 +51,21 @@ class ArtifactInfo:
         data = json.loads(info)
         return cls(
             filename=data.get("filename", UNKNOWN),
+            sha256=data.get("sha256", UNKNOWN),
             py_version=data.get("py_version", UNKNOWN),
             py_arch=data.get("py_arch", UNKNOWN),
             poetry_version=data.get("poetry_version", UNKNOWN),
             pyinstaller_version=data.get("pyinstaller_version", UNKNOWN),
-            sha256=data.get("sha256", UNKNOWN)
         )
 
     def json(self) -> str:
         """Return the JSON representation of this ArtifactInfo."""
         return json.dumps(self.__dict__)
 
-    def inject(self, template: str) -> str:
+    def inject_into(self, template: str) -> str:
         """Format the template string with data from this ArtifactInfo instance."""
-        return template.format(
+        return Template(template).safe_substitute(
             filename=self.filename,
+            sha256=self.sha256,
             py_version=self.py_version,
-            py_arch="64" if self.py_arch == "64" else "86",
-            poetry_version=self.poetry_version,
-            pyinstaller_version=self.pyinstaller_version,
-            sha256=self.sha256
         )

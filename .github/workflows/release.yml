@@ -8,10 +8,15 @@ on:
         required: true
         default: "develop"
         type: string
-      release_title:
-        description: "Title of this release"
+      poetry_version:
+        description: "Set the version of Poetry to use"
         required: true
-        default: "Unofficial Build {DATE} for {YOU_GET_VERSION}"
+        default: "1.4.2"
+        type: string
+      main_python_version:
+        description: "Select a default Python version for the main release"
+        required: true
+        default: "3.8"
         type: string
 
 jobs:
@@ -21,7 +26,7 @@ jobs:
     strategy:
       matrix:
         python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
-        arch: ["x86", "x64"]
+        arch: [ "x86", "x64" ]
 
     steps:
       - uses: actions/checkout@v3
@@ -40,7 +45,9 @@ jobs:
           architecture: ${{ matrix.arch }}
 
       - name: "Setup poetry"
-        uses: Gr1N/setup-poetry@v7
+        uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: ${{ inputs.poetry_version }}
 
       - name: "Build you-get.exe"
         shell: pwsh
@@ -68,16 +75,18 @@ jobs:
         with:
           path: .ci
 
-      - name: "Generate release notes"
+      - name: "Prepare for release"
+        id: prepare
         env:
           PYTHONPATH: .
         run: |
-          python scripts/ci/release_notes.py
+          echo "date=$(date '+%y%m%d')" >> "$GITHUB_OUTPUT"
+          python scripts/ci/main.py --poetry ${{ inputs.poetry_version }} --main ${{ inputs.main_python_version }}
 
       - name: "Release"
         uses: softprops/action-gh-release@v1
         with:
           files: .ci/**/*.zip
-          draft: true
-          name: ${{ inputs.release_title }}
+          # draft: true
+          name: Unofficial Build ${{ steps.prepare.outputs.date }} for ${{ inputs.you_get_tag }}
           body_path: scripts/ci/release_notes.md
