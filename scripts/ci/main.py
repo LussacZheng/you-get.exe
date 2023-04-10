@@ -8,16 +8,16 @@ import re
 import shutil
 import sys
 
+from scripts import ROOT
 from scripts.artifact import ArtifactInfo, CoreInfo
-from scripts.config import POETRY_LOCK, ROOT
 from scripts.ci.release_notes import generate_release_notes
-from scripts.utils import py_version_strings_match
+from scripts.versions import pyinstaller_version, py_version_strings_match
 
 
 def cli():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--poetry", required=True, help="Set the version of Poetry to use", metavar="VERSION")
-    parser.add_argument("--main", required=True, help="Select a Python version for the main release",
+    parser.add_argument("--poetry", required=True, help="set the version of Poetry to use", metavar="VERSION")
+    parser.add_argument("--main", required=True, help="select a Python version for the main release",
                         metavar="PY_VERSION")
     return parser.parse_args()
 
@@ -29,10 +29,7 @@ def get_core_info() -> CoreInfo:
         print(f"Please select a valid Python version, not `{arg.main}`!")
         sys.exit(1)
 
-    with open(POETRY_LOCK, "r", encoding="utf-8") as f:
-        pyinstaller_version = re.search('name = "pyinstaller"\nversion = "(.*)"', f.read()).group(1)
-
-    return CoreInfo(arg.main, arg.poetry, pyinstaller_version)
+    return CoreInfo(arg.main, arg.poetry, pyinstaller_version())
 
 
 def get_artifact_infos() -> list[ArtifactInfo]:

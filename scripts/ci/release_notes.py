@@ -5,10 +5,8 @@ import re
 
 from scripts.artifact import ArtifactInfo, CoreInfo
 
-DIR = os.path.dirname(os.path.realpath(__file__))
-FILENAME = os.path.splitext(os.path.basename(__file__))[0]
-INPUT = os.path.join(DIR, f"{FILENAME}.md.tmpl")
-OUTPUT = os.path.join(DIR, f"{FILENAME}.md")
+INPUT = os.path.splitext(__file__)[0] + ".md.tmpl"
+OUTPUT = os.path.splitext(__file__)[0] + ".md"
 
 INJECT_LABEL_MAIN = "{% main %}"
 INJECT_LABEL_ARTIFACT = "{% artifact %}"

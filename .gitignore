@@ -18,7 +18,7 @@ dist/released/*
 
 # Dev Scripts
 .test*/
-scripts/dev/use-proxy.conf
+scripts/dev/prepare.conf
 scripts/dev/you-get.exe.zip
 
 # CI

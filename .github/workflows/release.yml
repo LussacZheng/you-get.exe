@@ -14,7 +14,7 @@ on:
         default: "1.4.2"
         type: string
       main_python_version:
-        description: "Select a default Python version for the main release"
+        description: "Select a Python version for the main release"
         required: true
         default: "3.8"
         type: string
@@ -53,8 +53,7 @@ jobs:
         shell: pwsh
         run: |
           poetry install
-          poetry run python build.py -f
-          Move-Item -Path .temp\artifact_info.json -Destination dist
+          poetry run python build.py --ci
 
       - uses: actions/upload-artifact@v3
         with:

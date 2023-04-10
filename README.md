@@ -55,19 +55,20 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 ### Build for the first time
 
 1. Initialization
-    - Run `scripts/dev/prepare.bat` to clone repository `you-get`.  
-      *If you want to use proxy when cloning, edit `scripts/dev/use-proxy.conf` according to the example.*
-    - Create virtualenv and install dependencies.
-  
-      ```shell
-      poetry install
-      ```
+
+    ```shell
+    # run `scripts/dev/prepare.py` to clone repository `you-get`
+    python scripts/dev/prepare.py
+
+    # create virtualenv and install dependencies
+    poetry install
+    ```
 
 2. After initialization, run `build.py` under virtualenv.
 
-   ```shell
-   poetry run python build.py
-   ```
+    ```shell
+    poetry run python build.py
+    ```
 
 3. Find the executable in `dist/` directory.
 
@@ -76,27 +77,25 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 To re-build after the new release of You-Get:
 
 1. Preparation
-    - Make sure the scripts of this repository is up to date.
 
-      ```shell
-      git pull
-      ```
+    ```shell
+    # make sure the scripts of this repository is up to date
+    git pull
 
-      *If You-Get modified the [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) and I have not followed up and submitted in time, you need to manually edit `repository/_extractors/__init__.py` according to [this](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) .*
+    # update dependencies
+    poetry update
 
-    - Update dependencies.
-  
-      ```shell
-      poetry update
-      ```
+    # enter `U` to update repository `you-get`
+    python scripts/dev/prepare.py
+    ```
 
-    - Run `scripts/dev/prepare.bat`, and enter <kbd>U</kbd> to update repository `you-get`.  
+    *If You-Get modified the [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) and I have not followed up and submitted in time, you need to manually edit `repository/_extractors/__init__.py` according to [this](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) .*
 
 2. Re-run `build.py` under virtualenv.
 
-   ```shell
-   poetry run python build.py
-   ```
+    ```shell
+    poetry run python build.py
+    ```
 
 3. Find the executable in `dist/` directory.
 

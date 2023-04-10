@@ -63,19 +63,21 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 ### 第一次构建
 
 1. 初始化
-    - 运行 `scripts/dev/prepare.bat` 以克隆 `you-get` 项目仓库。  
-      *如果需要在克隆时使用代理，请参照示例文件编辑 `scripts/dev/use-proxy.conf` 。*
-    - 创建虚拟环境并安装依赖。
-  
-      ```shell
-      poetry install
-      ```
+
+    ```shell
+    # 运行 `scripts/dev/prepare.bat` 以克隆 `you-get` 项目仓库
+    # 如果需要在克隆时使用代理，请编辑 `scripts/dev/prepare.conf`
+    python scripts/dev/prepare.py
+
+    # 创建虚拟环境并安装依赖
+    poetry install
+    ```
 
 2. 初始化完成后，在虚拟环境中运行 `build.py` 。
 
-   ```shell
-   poetry run python build.py
-   ```
+    ```shell
+    poetry run python build.py
+    ```
 
 3. 打包好的可执行文件为 `dist/` 文件夹下。
 
@@ -84,27 +86,25 @@ git clone https://github.com/LussacZheng/you-get.exe.git
 在 You-Get 发布新版本后，按以下步骤重新打包：
 
 1. 准备
-    - 确保此项目脚本文件为最新。
 
-      ```shell
-      git pull
-      ```
+    ```shell
+    # 确保此项目文件为最新
+    git pull
 
-      *若 You-Get 修改了 [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) 而我尚未及时跟进并提交，你需要参照 [此处](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) 手动修改 `repository/_extractors/__init__.py` 。*
+    # 更新依赖
+    poetry update
 
-    - 更新依赖。
+    # 输入 `U` 以更新 `you-get` 项目仓库
+    python scripts/dev/prepare.py
+    ```
 
-      ```shell
-      poetry update
-      ```
-      
-    - 运行 `scripts/dev/prepare.bat` 并输入 <kbd>U</kbd> 以更新 `you-get` 项目仓库。
+    *若 You-Get 修改了 [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) 而我尚未及时跟进并提交，你需要参照 [此处](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) 手动修改 `repository/_extractors/__init__.py` 。*
 
 2. 重新在虚拟环境中运行 `build.py` 。
 
-   ```shell
-   poetry run python build.py
-   ```
+    ```shell
+    poetry run python build.py
+    ```
 
 3. 打包好的可执行文件在 `dist/` 文件夹下。
 

@@ -1,93 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import argparse
 import glob
 import os
-import re
 import shutil
 import sys
-from enum import Enum, unique
 
-import PyInstaller.__main__
-
-from scripts import utils
+from scripts import utils, ROOT
 from scripts.artifact import ArtifactInfo
-from scripts.utils import path_resolve, py_arch, py_version, date, date_tuple
-
-ROOT = os.path.dirname(os.path.realpath(__file__))
-
-# region ########## Util Functions ##########
-
-
-# Don't use this variable directly, use `version()` instead.
-__ver = "0.0.0"
-# In order to avoid redundant file IO
-__ver_found = False
-
-
-def version() -> str:
-    """Return the version string of 'you-get'. (Defined in `src/you_get/version.py`)"""
-
-    global __ver, __ver_found
-    if not __ver_found:
-        # Whether the version number is actually found, set to it True
-        __ver_found = True
-        # Try to get version string from `src/you_get/version.py`
-        version_file = path_resolve(ROOT, "repository/you-get/src/you_get/version.py")
-        if os.path.isfile(version_file):
-            with open(version_file, "r", encoding="utf-8") as f:
-                res = re.search(r"version.*'([\d.]+)'", f.read())
-                if res is not None:
-                    __ver = res.group(1)
-
-    return __ver
-
-
-def version_tuple() -> tuple:
-    """Return the version tuple of 'you-get'."""
-
-    v = [int(x) for x in version().split(".")]
-    while len(v) < 4:
-        v.append(0)
-    return tuple(v)
-
-
-@unique
-class EchoStyle(Enum):
-    HrEqual = -1  # horizontal rule (equal)
-    HrDash = -2  # horizontal rule (dash)
-    Title = 1  # title of a step
-    Running = 2  # running a sub-step
-    Complete = 3  # completed a step
-    Finish = 4  # finish of all the steps
-    Warn = 10  # error message
-
-    def echo(self, content: str = ""):
-        def line_of(char):
-            print(f'\n{char * 60}\n')
-
-        if self is EchoStyle.HrEqual:
-            line_of("=")
-        elif self is EchoStyle.HrDash:
-            line_of("-")
-        elif self is EchoStyle.Title:
-            EchoStyle.HrEqual.echo()
-            print(f' * {content}...')
-            EchoStyle.HrDash.echo()
-        elif self is EchoStyle.Running:
-            print(f' - {content}')
-        elif self is EchoStyle.Complete:
-            print(f'\n * {content} completed.')
-        elif self is EchoStyle.Finish:
-            EchoStyle.HrEqual.echo()
-            print(f' * {content}')
-            EchoStyle.HrEqual.echo()
-        elif self is EchoStyle.Warn:
-            print(f' ! {content}')
-
-
-# endregion
-
+from scripts.echo import EchoStyle
+from scripts.versions import py_version, py_arch, you_get_version, you_get_version_tuple, poetry_version
 
 # region ########## Config ##########
 
@@ -95,7 +18,7 @@ DIST = os.path.join(ROOT, "dist")
 STATIC = os.path.join(ROOT, "build")
 TEMP = os.path.join(ROOT, ".temp")
 ENTRY_POINT = "repository/you-get/you-get"
-DIST_FILENAME = f"you-get_{version()}_win{py_arch()}_py{py_version()}_UB{date()}.zip"
+DIST_FILENAME = f"you-get_{you_get_version()}_win{py_arch()}_py{py_version()}_UB{utils.date()}.zip"
 
 CONFIG = {
     "dist": {
@@ -106,7 +29,6 @@ CONFIG = {
         "products": os.path.join(TEMP, "you-get"),
         "version_info_tmpl": os.path.join(STATIC, "file_version_info.tmpl"),
         "version_info": os.path.join(TEMP, "file_version_info.txt"),
-        "artifact_info": os.path.join(TEMP, "artifact_info.json"),
     },
     "copy": [
         ("repository/you-get/LICENSE.txt", "LICENSE.txt"),
@@ -120,12 +42,16 @@ CONFIG = {
         "list": ["you-get.exe", "LICENSE.txt", "README.md", "README_cn.md", "sha256sum.txt"],
         "comment": os.path.join(DIST, "LICENSE.txt"),
     },
+    "ci": {
+        "artifact_info": os.path.join(DIST, "artifact_info.json"),
+    },
 }
 
 FLAGS = {
-    "force_delete": False,
+    # force delete the outputs of last build
+    "force": False,
     "skip_build": False,
-    # "something": False,
+    "ci": False,
 }
 
 
@@ -138,21 +64,23 @@ FLAGS = {
 def init():
     """Step 0: Init"""
 
-    for arg in sys.argv[1:]:
-        if arg == "-f":
-            FLAGS["force_delete"] = True
-        if arg == "--skip-build":
-            FLAGS["skip_build"] = True
-        if arg == "--ci":
-            FLAGS["force_delete"] = True
-            # FLAGS["something"] = True
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--force", action="store_true", help="force the whole process, do not ask anything")
+    parser.add_argument("-s", "--skip-build", action="store_true", help="skip the main building process")
+    parser.add_argument("--ci", action="store_true", help="CI-specific argument")
+
+    global FLAGS
+    FLAGS = parser.parse_args().__dict__
+
+    if FLAGS["ci"]:
+        FLAGS["force"] = True
 
 
 def check():
     """Step 1: Check"""
 
-    if not os.path.isfile(path_resolve(ROOT, ENTRY_POINT)):
-        EchoStyle.Warn.echo('Please run "devscripts\\init.bat" first or clone the repository of "you-get".')
+    if not os.path.isfile(utils.path_resolve(ROOT, ENTRY_POINT)):
+        EchoStyle.Warn.echo("Please run `scripts/dev/prepare.py` to clone the repository `you-get`.")
         sys.exit(1)
 
 
@@ -161,8 +89,8 @@ def clean():
 
     def rm(file_path: str, force_delete: bool = True):
         if not force_delete:
-            choose = input(f' ! "{file_path}".\n ! Is it OK to delete this file (Y/N)? ')
-            if choose != "Y" and choose != "y":
+            choose = input(f' ! "{file_path}".\n ! Is it OK to delete this file (Y/N)? ').upper()
+            if choose != "Y":
                 EchoStyle.Finish.echo("Clean stopped.")
                 sys.exit(0)
         os.remove(file_path)
@@ -183,7 +111,7 @@ def clean():
                     rm(file)
         archive = CONFIG["zip"]["path"]
         if os.path.isfile(archive):
-            rm(archive, FLAGS["force_delete"])
+            rm(archive, FLAGS["force"])
 
     EchoStyle.Complete.echo("Clean")
 
@@ -209,10 +137,10 @@ def build():
             template = f.read()
         with open(dst, "w", encoding="utf-8") as f:
             f.write(template.format(
-                version_tuple=version_tuple(),
-                date_tuple=date_tuple(),
-                version=version(),
-                date=date(),
+                version_tuple=you_get_version_tuple(),
+                date_tuple=utils.date_tuple(),
+                version=you_get_version(),
+                date=utils.date(),
                 py_version=py_version(),
                 py_arch="64" if py_arch() == "64" else "86",
             ))
@@ -232,6 +160,8 @@ def build():
         for file in glob.glob("repository/_extractors/*.py"):
             shutil.copy(file, "repository/you-get/src/you_get/extractors/")
 
+        import PyInstaller.__main__
+
         # PyInstaller bundle command
         PyInstaller.__main__.run([
             ENTRY_POINT,
@@ -243,7 +173,7 @@ def build():
             '--hidden-import=you_get.cli_wrapper',
             '--hidden-import=you_get.processor',
             '--hidden-import=you_get.util',
-            '-F',
+            '--onefile',
             '--noupx',
             '--icon=../build/you-get.ico',
             '--version-file=file_version_info.txt'
@@ -267,7 +197,7 @@ def copy():
     EchoStyle.Title.echo("Copy the required files")
     for src, dst in CONFIG["copy"]:
         EchoStyle.Running.echo(f'Copying "{src}" to "{dst}"...')
-        shutil.copy(path_resolve(ROOT, src), os.path.join(DIST, dst))
+        shutil.copy(utils.path_resolve(ROOT, src), os.path.join(DIST, dst))
     EchoStyle.Running.echo(f'All the required files are now in: "{DIST}"')
     EchoStyle.Complete.echo("Copy")
 
@@ -309,14 +239,25 @@ def package():
     EchoStyle.Complete.echo("Zip")
 
 
-def generate_artifact_info(sha256: str):
-    with open(CONFIG["build"]["artifact_info"], "w", encoding="utf-8") as f:
+def ci(sha256: str):
+    """Step 88: CI-specific step
+
+    1. generate `artifact_info.json`
+    2. ...
+    """
+
+    if not FLAGS["ci"]:
+        return
+
+    import PyInstaller
+
+    with open(CONFIG["ci"]["artifact_info"], "w", encoding="utf-8") as f:
         f.write(ArtifactInfo(
             filename=DIST_FILENAME,
             sha256=sha256,
             py_version=py_version(),
             py_arch=py_arch(),
-            poetry_version=utils.poetry_version(),
+            poetry_version=poetry_version(),
             pyinstaller_version=PyInstaller.__version__,
         ).json())
 
@@ -339,7 +280,7 @@ def main():
     sha256 = checksum()
     convert_line_endings()
     package()
-    generate_artifact_info(sha256)
+    ci(sha256)
     finish()
     return
 
