@@ -5,21 +5,19 @@
 # Project
 __pycache__
 .venv
-## You-Get repository from `git clone`
-repository/you-get/
+
+# Dev Scripts
+.test*/
+scripts/dev/you-get.exe.zip
 
 # PyInstaller
 .temp
-## Ignore every file in "dist/" except "dist/released/.gitkeep"
+
+# Ignore all files in "dist/" except "dist/released/.gitkeep"
 dist/*
 !dist/released/
 dist/released/*
 !dist/released/.gitkeep
-
-# Dev Scripts
-.test*/
-scripts/dev/prepare.conf
-scripts/dev/you-get.exe.zip
 
 # CI
 .ci

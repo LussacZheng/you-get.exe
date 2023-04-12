@@ -30,13 +30,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: "Checkout `you-get`"
-        uses: actions/checkout@v3
         with:
-          repository: "soimort/you-get"
-          path: "repository/you-get"
-          ref: ${{ inputs.you_get_tag }}
+          submodules: false
+
+      - name: "Checkout submodule `you-get` to a specific commit"
+        # https://github.com/actions/checkout/issues/503
+        run: |
+          git submodule update --init --recursive
+          cd repository/you-get
+          git checkout ${{ inputs.you_get_tag }}
 
       - name: "Set up Python ${{ matrix.python-version }}"
         uses: actions/setup-python@v4
@@ -50,7 +52,6 @@ jobs:
           poetry-version: ${{ inputs.poetry_version }}
 
       - name: "Build you-get.exe"
-        shell: pwsh
         run: |
           poetry install
           poetry run python build.py --ci

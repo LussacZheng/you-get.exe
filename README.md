@@ -46,60 +46,48 @@ The following dependencies are required and must be installed separately.
 
 - [Git](https://git-scm.com/)
 
-### Get this repository
-
-```shell
-git clone https://github.com/LussacZheng/you-get.exe.git
-```
-
 ### Build for the first time
 
-1. Initialization
+```shell
+# clone this repository
+git clone --recurse-submodules https://github.com/LussacZheng/you-get.exe.git
 
-    ```shell
-    # run `scripts/dev/prepare.py` to clone repository `you-get`
-    python scripts/dev/prepare.py
+# create virtualenv and install dependencies
+poetry install
 
-    # create virtualenv and install dependencies
-    poetry install
-    ```
+# run `build.py` under virtualenv
+poetry run python build.py
+```
 
-2. After initialization, run `build.py` under virtualenv.
-
-    ```shell
-    poetry run python build.py
-    ```
-
-3. Find the executable in `dist/` directory.
+Find the executable in `dist/` directory.
 
 ### Build again if You-Get upgraded
 
 To re-build after the new release of You-Get:
 
-1. Preparation
+```shell
+# make sure the build script is up to date
+git pull
 
-    ```shell
-    # make sure the scripts of this repository is up to date
-    git pull
+# update the repository of `you-get`
+git submodule foreach git pull
 
-    # update dependencies
-    poetry update
+# update dependencies
+poetry update
 
-    # enter `U` to update repository `you-get`
-    python scripts/dev/prepare.py
-    ```
+# re-run `build.py` under virtualenv
+poetry run python build.py
+```
 
-    *If You-Get modified the [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) and I have not followed up and submitted in time, you need to manually edit `repository/_extractors/__init__.py` according to [this](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) .*
-
-2. Re-run `build.py` under virtualenv.
-
-    ```shell
-    poetry run python build.py
-    ```
-
-3. Find the executable in `dist/` directory.
+Find the executable in `dist/` directory.
 
 ### More Information
+
+If You-Get modified the
+[`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py)
+and I have not followed up and submitted in time,
+you need to manually edit `repository/_extractors/__init__.py` according to
+[this](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5).
 
 See more information in [**doc**](https://github.com/LussacZheng/you-get.exe/tree/master/doc) folder.
 

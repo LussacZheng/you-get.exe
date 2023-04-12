@@ -45,70 +45,56 @@ you-get -k --debug https://your.video/url/here
 - [Poetry](https://python-poetry.org/docs/#installation)
 
    ```shell
-   # wget https://install.python-poetry.org -O install-poetry.py
-
    # 安装时可能需要使用代理
    # set HTTP_PROXY=http://127.0.0.1:7890 & set HTTPS_PROXY=http://127.0.0.1:7890
+   wget https://install.python-poetry.org -O install-poetry.py
    python3 install-poetry.py
    ```
 
 - [Git](https://git-scm.com/)
 
-### 获取此项目
-
-```shell
-git clone https://github.com/LussacZheng/you-get.exe.git
-```
-
 ### 第一次构建
 
-1. 初始化
+```shell
+# 获取此项目
+git clone https://github.com/LussacZheng/you-get.exe.git
 
-    ```shell
-    # 运行 `scripts/dev/prepare.bat` 以克隆 `you-get` 项目仓库
-    # 如果需要在克隆时使用代理，请编辑 `scripts/dev/prepare.conf`
-    python scripts/dev/prepare.py
+# 创建虚拟环境并安装依赖
+poetry install
 
-    # 创建虚拟环境并安装依赖
-    poetry install
-    ```
+在虚拟环境中运行 `build.py`
+poetry run python build.py
+```
 
-2. 初始化完成后，在虚拟环境中运行 `build.py` 。
-
-    ```shell
-    poetry run python build.py
-    ```
-
-3. 打包好的可执行文件为 `dist/` 文件夹下。
+打包好的可执行文件为 `dist/` 文件夹下。
 
 ### You-Get 更新后的构建
 
 在 You-Get 发布新版本后，按以下步骤重新打包：
 
-1. 准备
+```shell
+# 确保此项目文件为最新
+git pull
 
-    ```shell
-    # 确保此项目文件为最新
-    git pull
+# 更新 `you-get` 项目仓库
+git submodule foreach git pull
 
-    # 更新依赖
-    poetry update
+# 更新依赖
+poetry update
 
-    # 输入 `U` 以更新 `you-get` 项目仓库
-    python scripts/dev/prepare.py
-    ```
+# 重新在虚拟环境中运行 `build.py`
+poetry run python build.py
+```
 
-    *若 You-Get 修改了 [`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py) 而我尚未及时跟进并提交，你需要参照 [此处](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5) 手动修改 `repository/_extractors/__init__.py` 。*
-
-2. 重新在虚拟环境中运行 `build.py` 。
-
-    ```shell
-    poetry run python build.py
-    ```
-
-3. 打包好的可执行文件在 `dist/` 文件夹下。
+打包好的可执行文件在 `dist/` 文件夹下。
 
 ### 更多信息
+
+若 You-Get 修改了
+[`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py)
+而我尚未及时跟进并提交，你需要参照
+[此处](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5)
+手动修改 `repository/_extractors/__init__.py`。
 
 查阅 [**doc**](https://github.com/LussacZheng/you-get.exe/tree/master/doc) 文件夹以了解更多信息。
 
