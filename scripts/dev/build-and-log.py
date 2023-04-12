@@ -19,8 +19,8 @@ def main():
 
     os.chdir(ROOT)
 
-    if not os.path.exists("./dist"):
-        os.mkdir("dist")
+    if not os.path.exists(DIST):
+        os.mkdir(DIST)
 
     print(" * Building `you-get.exe` ...")
 
@@ -28,7 +28,7 @@ def main():
     log = os.path.join(DIST, os.path.splitext(DIST_FILENAME)[0] + ".log")
     with open(log, "w", encoding="utf-8") as f:
         # "python -u": force the stdout and stderr streams to be unbuffered
-        # "build.py -f": force delete the outputs of last build
+        # "build.py --force": force delete the outputs of last build
         subprocess.call("poetry run python -u build.py --force", stdout=f, stderr=subprocess.STDOUT)
 
     print(" * All completed.")

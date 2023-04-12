@@ -12,7 +12,7 @@ INCLUDE = [
     "build/file_version_info.tmpl",
     "build/you-get.ico",
     "repository/",
-    "scripts/dev/build-and-log.bat",
+    "scripts/dev/build-and-log.py",
     "build.py",
     "poetry.lock",
     "poetry.toml",
@@ -36,6 +36,8 @@ def main():
                     dirs[:] = [d for d in dirs if d not in EXCLUDE]
                     for file in files:
                         z.write(os.path.join(root, file))
+            else:
+                print(f" ! Item not found: {item}")
 
     print(f" * Zip file saved in: `{OUTPUT}`")
 
