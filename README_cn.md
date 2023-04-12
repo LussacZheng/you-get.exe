@@ -78,7 +78,7 @@ poetry run python build.py
 git pull
 
 # 更新 `you-get` 项目仓库
-git submodule foreach git pull
+git submodule update --remote
 
 # 更新依赖
 poetry update

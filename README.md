@@ -71,7 +71,7 @@ To re-build after the new release of You-Get:
 git pull
 
 # update the repository of `you-get`
-git submodule foreach git pull
+git submodule update --remote
 
 # update dependencies
 poetry update
