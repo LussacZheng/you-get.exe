@@ -1,4 +1,4 @@
-[submodule "repository/you-get"]
-	path = repository/you-get
+[submodule "build/you-get"]
+	path = build/you-get
 	url = https://github.com/soimort/you-get.git
 	branch = develop

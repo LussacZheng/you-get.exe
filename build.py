@@ -15,10 +15,11 @@ from scripts.versions import py_version, py_arch, you_get_version, you_get_versi
 # region ########## Config ##########
 
 DIST = os.path.join(ROOT, "dist")
-STATIC = os.path.join(ROOT, "build")
 TEMP = os.path.join(ROOT, ".temp")
-ENTRY_POINT = "repository/you-get/you-get"
-DIST_FILENAME = f"you-get_{you_get_version()}_win{py_arch()}_py{py_version()}_UB{utils.date()}.zip"
+BUILD = "build"
+REPO = f"{BUILD}/you-get"
+ENTRY_POINT = f"{REPO}/you-get"
+DIST_FILENAME = f"you-get_{you_get_version(REPO)}_win{py_arch()}_py{py_version()}_UB{utils.date()}.zip"
 
 CONFIG = {
     "dist": {
@@ -27,11 +28,11 @@ CONFIG = {
     },
     "build": {
         "products": os.path.join(TEMP, "you-get"),
-        "version_info_tmpl": os.path.join(STATIC, "file_version_info.tmpl"),
+        "version_info_tmpl": os.path.join(ROOT, BUILD, "file_version_info.tmpl"),
         "version_info": os.path.join(TEMP, "file_version_info.txt"),
     },
     "copy": [
-        ("repository/you-get/LICENSE.txt", "LICENSE.txt"),
+        (f"{REPO}/LICENSE.txt", "LICENSE.txt"),
         ("README.md", "README.md"),
         ("README_cn.md", "README_cn.md"),
     ],
@@ -80,7 +81,7 @@ def check():
     """Step 1: Check"""
 
     if not os.path.isfile(utils.path_resolve(ROOT, ENTRY_POINT)):
-        EchoStyle.Warn.echo("Please run `scripts/dev/prepare.py` to clone the repository `you-get`.")
+        EchoStyle.Warn.echo("Please run `git submodule update --init` to clone the repository of `you-get`.")
         sys.exit(1)
 
 
@@ -137,9 +138,9 @@ def build():
             template = f.read()
         with open(dst, "w", encoding="utf-8") as f:
             f.write(template.format(
-                version_tuple=you_get_version_tuple(),
+                version_tuple=you_get_version_tuple(REPO),
                 date_tuple=utils.date_tuple(),
-                version=you_get_version(),
+                version=you_get_version(REPO),
                 date=utils.date(),
                 py_version=py_version(),
                 py_arch="64" if py_arch() == "64" else "86",
@@ -156,16 +157,16 @@ def build():
         #     in order that we can recover everything after build.
         # Then copy a new `__init__.py`, which has imported the missing extractors,
         #     into the module "you_get.extractors".
-        shutil.move("repository/you-get/src/you_get/extractors/__init__.py", "repository/")
-        for file in glob.glob("repository/_extractors/*.py"):
-            shutil.copy(file, "repository/you-get/src/you_get/extractors/")
+        shutil.move(f"{REPO}/src/you_get/extractors/__init__.py", BUILD)
+        for file in glob.glob(f"{BUILD}/_extractors/*.py"):
+            shutil.copy(file, f"{REPO}/src/you_get/extractors/")
 
         import PyInstaller.__main__
 
         # PyInstaller bundle command
         PyInstaller.__main__.run([
             ENTRY_POINT,
-            '--path=repository/you-get/src',
+            f'--path={REPO}/src',
             '--workpath=.temp',
             '--specpath=.temp',
             '--distpath=dist',
@@ -175,14 +176,14 @@ def build():
             '--hidden-import=you_get.util',
             '--onefile',
             '--noupx',
-            '--icon=../build/you-get.ico',
+            f'--icon=../{BUILD}/you-get.ico',
             '--version-file=file_version_info.txt'
         ])
     finally:
         # Recover everything in "you-get.git" after built, whether this step was successful or not
-        for file in glob.glob("repository/_extractors/*.py"):
-            os.remove("repository/you-get/src/you_get/extractors/" + os.path.basename(file))
-        shutil.move("repository/__init__.py", "repository/you-get/src/you_get/extractors/")
+        for file in glob.glob(f"{BUILD}/_extractors/*.py"):
+            os.remove(f"{REPO}/src/you_get/extractors/" + os.path.basename(file))
+        shutil.move(f"{BUILD}/__init__.py", f"{REPO}/src/you_get/extractors/")
         os.chdir(previous_dir)
 
     EchoStyle.HrDash.echo()

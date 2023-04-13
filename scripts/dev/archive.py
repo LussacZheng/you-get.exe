@@ -9,9 +9,7 @@ ROOT = os.path.normpath(os.path.join(_dir, "../.."))
 OUTPUT = os.path.join(_dir, "you-get.exe.zip")
 
 INCLUDE = [
-    "build/file_version_info.tmpl",
-    "build/you-get.ico",
-    "repository/",
+    "build/",
     "scripts/dev/build-and-log.py",
     "build.py",
     "poetry.lock",
@@ -20,7 +18,7 @@ INCLUDE = [
     "README.md",
     "README_cn.md",
 ]
-EXCLUDE = [".git", "__pycache__"]
+EXCLUDE = [".git", "__pycache__", "you-get_extracted_from_0.4.985.ico"]
 
 
 def main():
@@ -35,7 +33,8 @@ def main():
                     # https://stackoverflow.com/a/19859907
                     dirs[:] = [d for d in dirs if d not in EXCLUDE]
                     for file in files:
-                        z.write(os.path.join(root, file))
+                        if file not in EXCLUDE:
+                            z.write(os.path.join(root, file))
             else:
                 print(f" ! Item not found: {item}")
 

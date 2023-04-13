@@ -2,6 +2,7 @@ import os
 import platform
 import re
 import subprocess
+import sys
 
 from scripts import ROOT
 from scripts.utils import path_resolve
@@ -55,22 +56,22 @@ def poetry_version() -> str:
         return UNKNOWN
 
 
-def pyinstaller_version() -> str:
+def pyinstaller_version(lock_file="poetry.lock") -> str:
     """Get the version of currently installed PyInstaller."""
 
-    return _read_and_search(os.path.join(ROOT, "poetry.lock"), 'name = "pyinstaller"\nversion = "(.*)"')
+    return _read_and_search(os.path.join(ROOT, lock_file), 'name = "pyinstaller"\nversion = "(.*)"')
 
 
-def you_get_version() -> str:
+def you_get_version(repo_path: str) -> str:
     """Return the version string of 'you-get'. (Defined in `src/you_get/version.py`)"""
 
-    return _read_and_search(path_resolve(ROOT, "repository/you-get/src/you_get/version.py"), r"version.*'([\d.]+)'")
+    return _read_and_search(path_resolve(ROOT, repo_path, "src/you_get/version.py"), r"version.*'([\d.]+)'")
 
 
-def you_get_version_tuple() -> tuple:
+def you_get_version_tuple(repo_path: str) -> tuple:
     """Return the version tuple of 'you-get'."""
 
-    v = [int(x) for x in you_get_version().split(".")]
+    v = [int(x) for x in you_get_version(repo_path).split(".")]
     while len(v) < 4:
         v.append(0)
     return tuple(v)
@@ -79,6 +80,10 @@ def you_get_version_tuple() -> tuple:
 def _read_and_search(file_path: str, regexp: str) -> str:
     """Read th file and return the first matched sub-string."""
 
-    with open(file_path, "r", encoding="utf-8") as f:
-        res = re.search(regexp, f.read())
-    return res.group(1) if res is not None else UNKNOWN
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return re.search(regexp, f.read()).group(1)
+    except FileNotFoundError as e:
+        sys.exit(e)
+    except AttributeError:
+        sys.exit(f"[ERROR] Unable to find substring matching `{regexp}` in `{file_path}`")
