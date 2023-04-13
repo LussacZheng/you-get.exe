@@ -29,7 +29,7 @@ def main():
     with open(log, "w", encoding="utf-8") as f:
         # "python -u": force the stdout and stderr streams to be unbuffered
         # "build.py --force": force delete the outputs of last build
-        subprocess.call("poetry run python -u build.py --force", stdout=f, stderr=subprocess.STDOUT)
+        subprocess.call(["poetry", "run", "python", "-u", "build.py", "--force"], stdout=f, stderr=subprocess.STDOUT)
 
     print(" * All completed.")
     print(f" * Build logs saved in: `{log}`")

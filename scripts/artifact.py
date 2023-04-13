@@ -60,7 +60,7 @@ class ArtifactInfo(Info):
 
     def json(self) -> str:
         """Return the JSON representation of this ArtifactInfo."""
-        return json.dumps(self.__dict__)
+        return json.dumps(self.__dict__, indent=2)
 
     def inject_into(self, template: str) -> str:
         """Format the template string with data from this ArtifactInfo instance."""

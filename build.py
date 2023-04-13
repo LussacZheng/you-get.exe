@@ -19,12 +19,12 @@ TEMP = os.path.join(ROOT, ".temp")
 BUILD = "build"
 REPO = f"{BUILD}/you-get"
 ENTRY_POINT = f"{REPO}/you-get"
+EXECUTABLE = "you-get.exe" if os.name == "nt" else "you-get"
 DIST_FILENAME = f"you-get_{you_get_version(REPO)}_win{py_arch()}_py{py_version()}_UB{utils.date()}.zip"
 
 CONFIG = {
     "dist": {
-        "name": "you-get.exe",
-        "path": os.path.join(DIST, "you-get.exe"),
+        "path": os.path.join(DIST, EXECUTABLE),
     },
     "build": {
         "products": os.path.join(TEMP, "you-get"),
@@ -40,7 +40,7 @@ CONFIG = {
     "crlf2lf": ["LICENSE.txt", "README.md", "README_cn.md", "sha256sum.txt"],
     "zip": {
         "path": os.path.join(DIST, DIST_FILENAME),
-        "list": ["you-get.exe", "LICENSE.txt", "README.md", "README_cn.md", "sha256sum.txt"],
+        "list": [EXECUTABLE, "LICENSE.txt", "README.md", "README_cn.md", "sha256sum.txt"],
         "comment": os.path.join(DIST, "LICENSE.txt"),
     },
     "ci": {
@@ -108,7 +108,7 @@ def clean():
         for f in CONFIG["zip"]["list"]:
             file = os.path.join(DIST, f)
             if os.path.isfile(file):
-                if not (FLAGS["skip_build"] and f == "you-get.exe"):
+                if not (FLAGS["skip_build"] and f == EXECUTABLE):
                     rm(file)
         archive = CONFIG["zip"]["path"]
         if os.path.isfile(archive):
@@ -226,11 +226,11 @@ def copy():
 def checksum() -> str:
     """Step 5: Checksum"""
 
-    EchoStyle.Title.echo('SHA256 Checksum of "you-get.exe"')
+    EchoStyle.Title.echo('SHA256 Checksum of "you-get" executable')
     hash_value = utils.sha256sum(CONFIG["dist"]["path"])
     output = CONFIG["sha256sum"]
     with open(output, "w", encoding="utf-8") as f:
-        f.write(f'{hash_value} *{CONFIG["dist"]["name"]}')
+        f.write(f'{hash_value} *{EXECUTABLE}')
 
     EchoStyle.Running.echo(f'SHA256 Checksum: {hash_value}')
     # EchoStyle.Running.echo("SHA256 Checksum has been copied into your clipboard.")
