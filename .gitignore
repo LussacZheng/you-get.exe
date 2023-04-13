@@ -2,16 +2,15 @@
 .idea
 .vscode
 
-# Project
+# Project, PyInstaller, build.py
 __pycache__
+.temp
 .venv
+build/__init__.py
 
 # Dev Scripts
 .test*/
 scripts/dev/you-get.exe.zip
-
-# PyInstaller
-.temp
 
 # Ignore all files in "dist/" except "dist/released/.gitkeep"
 dist/*

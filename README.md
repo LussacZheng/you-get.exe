@@ -82,23 +82,16 @@ poetry run python build.py
 
 Find the executable in `dist/` directory.
 
-### More Information
-
-If You-Get modified the
-[`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py)
-and I have not followed up and submitted in time,
-you need to manually edit `repository/_extractors/__init__.py` according to
-[this](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5).
-
-See more information in [**doc**](https://github.com/LussacZheng/you-get.exe/tree/master/doc) folder.
-
 ---
 
 ## TODO
 
 - [x] Introduce [Poetry](https://github.com/python-poetry/poetry) for dependency management.
-- [x] Rewrite `build.bat` with Python.
-- [x] Use GitHub Action to build and release.
+- [x] Rewrite build script with Python.
+- [x] Use GitHub Actions to build and release.
+- [x] Add `you-get` as git submodule.
+- [x] Automatically append missing extractors to `src/you_get/extractors/__init__.py` when building.
+- [ ] Support Linux and macOS.
 
 ## License
 

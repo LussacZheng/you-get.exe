@@ -58,7 +58,7 @@ you-get -k --debug https://your.video/url/here
 
 ```shell
 # 获取此项目
-git clone https://github.com/LussacZheng/you-get.exe.git
+git clone --recurse-submodules https://github.com/LussacZheng/you-get.exe.git
 
 # 创建虚拟环境并安装依赖
 poetry install
@@ -89,23 +89,16 @@ poetry run python build.py
 
 打包好的可执行文件在 `dist/` 文件夹下。
 
-### 更多信息
-
-若 You-Get 修改了
-[`src/you_get/extractors/__init__.py`](https://github.com/soimort/you-get/blob/develop/src/you_get/extractors/__init__.py)
-而我尚未及时跟进并提交，你需要参照
-[此处](https://github.com/LussacZheng/you-get.exe/blob/master/doc/PyInstaller-Options.md#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5)
-手动修改 `repository/_extractors/__init__.py`。
-
-查阅 [**doc**](https://github.com/LussacZheng/you-get.exe/tree/master/doc) 文件夹以了解更多信息。
-
 ---
 
 ## TODO
 
 - [x] 引入 [Poetry](https://github.com/python-poetry/poetry) 用于依赖管理。
-- [x] 用 Python 重写 `build.bat` 。
-- [x] 使用 GitHub Action 进行构建和发布。
+- [x] 用 Python 重写构建脚本。
+- [x] 使用 GitHub Actions 进行构建和发布。
+- [x] 将 `you-get` 作为 git submodule 管理。
+- [x] 构建时自动向 `src/you_get/extractors/__init__.py` 追加缺失的 extractors。
+- [ ] 支持 Linux 和 macOS。
 
 ## License
 
