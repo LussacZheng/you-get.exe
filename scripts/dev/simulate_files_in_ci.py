@@ -35,10 +35,9 @@ def main():
         )
 
         os.makedirs(artifact_dir, exist_ok=True)
-        with open(os.path.join(artifact_dir, "artifact_info.json"), "w", encoding="utf-8") as f1:
-            f1.write(info.json())
-        with open(os.path.join(artifact_dir, artifact_name), "w", encoding="utf-8") as f2:
-            f2.write("This is a fake zip archive file.")
+        info.dump(artifact_dir)
+        with open(os.path.join(artifact_dir, artifact_name), "w", encoding="utf-8") as f:
+            f.write("This is a fake zip archive file.")
 
     print(f" * To simulate CI environment, a lots of test files have been created under\n   `{CI}`.\n")
     print(" * Now you can test `scripts/ci/main.py` locally with:\n")

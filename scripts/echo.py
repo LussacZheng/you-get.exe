@@ -9,7 +9,8 @@ class EchoStyle(Enum):
     Running = 2  # running a sub-step
     Complete = 3  # completed a step
     Finish = 4  # finish of all the steps
-    Warn = 10  # error message
+    Warn = 10  # warning message
+    Exit = 20  # error message (and exit)
 
     def echo(self, content: str = ""):
         def line_of(char):
@@ -32,4 +33,7 @@ class EchoStyle(Enum):
             print(f' * {content}')
             EchoStyle.HrEqual.echo()
         elif self is EchoStyle.Warn:
-            print(f' ! {content}')
+            print(f' ? {content}')
+        elif self is EchoStyle.Exit:
+            import sys
+            sys.exit(f' ! {content}')

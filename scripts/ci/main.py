@@ -41,7 +41,7 @@ def get_artifact_infos() -> list[ArtifactInfo]:
             artifact_infos.append(ArtifactInfo.from_json_str(f.read()))
 
     if not artifact_infos:
-        print(f"Unable to find any `artifact_info.json` in `{location}`!")
+        print(f"Unable to find any `{ArtifactInfo.DUMP_FILENAME}` in `{location}`!")
         sys.exit(1)
 
     # sort artifact_infos by `py_version.minor`, then `py_arch`

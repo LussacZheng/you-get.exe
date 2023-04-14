@@ -5,7 +5,6 @@ import subprocess
 import sys
 
 from scripts import ROOT
-from scripts.utils import path_resolve
 
 UNKNOWN = "unknown"
 
@@ -65,7 +64,7 @@ def pyinstaller_version(lock_file="poetry.lock") -> str:
 def you_get_version(repo_path: str) -> str:
     """Return the version string of 'you-get'. (Defined in `src/you_get/version.py`)"""
 
-    return _read_and_search(path_resolve(ROOT, repo_path, "src/you_get/version.py"), r"version.*'([\d.]+)'")
+    return _read_and_search(os.path.join(ROOT, repo_path, "src/you_get/version.py"), r"version.*'([\d.]+)'")
 
 
 def you_get_version_tuple(repo_path: str) -> tuple:

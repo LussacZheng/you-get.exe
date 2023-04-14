@@ -5,7 +5,7 @@ import argparse
 import os
 import re
 import shutil
-import sys
+import zipfile
 
 from scripts import utils, ROOT
 from scripts.artifact import ArtifactInfo
@@ -24,27 +24,22 @@ DIST_FILENAME = f"you-get_{you_get_version(REPO)}_win{py_arch()}_py{py_version()
 
 CONFIG = {
     "dist": {
-        "path": os.path.join(DIST, EXECUTABLE),
+        "exe": os.path.join(DIST, EXECUTABLE),
+        "zip": os.path.join(DIST, DIST_FILENAME),
     },
     "build": {
         "products": os.path.join(TEMP, "you-get"),
         "version_info_tmpl": os.path.join(ROOT, BUILD, "file_version_info.tmpl"),
         "version_info": os.path.join(TEMP, "file_version_info.txt"),
     },
-    "copy": [
-        (f"{REPO}/LICENSE.txt", "LICENSE.txt"),
-        ("README.md", "README.md"),
-        ("README_cn.md", "README_cn.md"),
-    ],
-    "sha256sum": os.path.join(DIST, "sha256sum.txt"),
-    "crlf2lf": ["LICENSE.txt", "README.md", "README_cn.md", "sha256sum.txt"],
     "zip": {
-        "path": os.path.join(DIST, DIST_FILENAME),
-        "list": [EXECUTABLE, "LICENSE.txt", "README.md", "README_cn.md", "sha256sum.txt"],
-        "comment": os.path.join(DIST, "LICENSE.txt"),
-    },
-    "ci": {
-        "artifact_info": os.path.join(DIST, "artifact_info.json"),
+        "docs": [
+            (f"{REPO}/LICENSE.txt", "LICENSE.txt"),
+            ("README.md", "README.md"),
+            ("README_cn.md", "README_cn.md"),
+        ],
+        "checksum": "sha256sum.txt",
+        "comment": os.path.join(ROOT, f"{REPO}/LICENSE.txt"),
     },
 }
 
@@ -80,20 +75,20 @@ def init():
 def check():
     """Step 1: Check"""
 
-    if not os.path.isfile(utils.path_resolve(ROOT, ENTRY_POINT)):
-        EchoStyle.Warn.echo("Please run `git submodule update --init` to clone the repository of `you-get`.")
-        sys.exit(1)
+    if not os.path.isfile(os.path.join(ROOT, ENTRY_POINT)):
+        EchoStyle.Exit.echo("Please run `git submodule update --init` to clone the repository of `you-get`.")
 
 
 def clean():
     """Step 2: Clean"""
 
     def rm(file_path: str, force_delete: bool = True):
+        if not os.path.isfile(file_path):
+            return
         if not force_delete:
-            choose = input(f' ! "{file_path}".\n ! Is it OK to delete this file (Y/N)? ').upper()
+            choose = input(f' ? "{file_path}".\n ? Is it OK to delete this file (Y/N)? ').upper()
             if choose != "Y":
-                EchoStyle.Finish.echo("Clean stopped.")
-                sys.exit(0)
+                EchoStyle.Exit.echo("Clean canceled.")
         os.remove(file_path)
         EchoStyle.Running.echo(f'Deleted "{file_path}"')
 
@@ -104,15 +99,14 @@ def clean():
         shutil.rmtree(TEMP)
 
     # Clean last dist
-    if os.path.exists(DIST):
-        for f in CONFIG["zip"]["list"]:
-            file = os.path.join(DIST, f)
-            if os.path.isfile(file):
-                if not (FLAGS["skip_build"] and f == EXECUTABLE):
-                    rm(file)
-        archive = CONFIG["zip"]["path"]
-        if os.path.isfile(archive):
-            rm(archive, FLAGS["force"])
+    exe = CONFIG["dist"]["exe"]
+    if FLAGS["skip_build"]:
+        if not os.path.isfile(exe):
+            EchoStyle.Exit.echo("You can't skip build when you haven't built it.")
+    else:
+        rm(exe)
+
+    rm(CONFIG["dist"]["zip"], FLAGS["force"])
 
     EchoStyle.Complete.echo("Clean")
 
@@ -208,79 +202,61 @@ def build():
 
     EchoStyle.HrDash.echo()
     EchoStyle.Running.echo(f'Build logs saved in:       "{CONFIG["build"]["products"]}"')
-    EchoStyle.Running.echo(f'Build executable saved to: "{CONFIG["dist"]["path"]}"')
+    EchoStyle.Running.echo(f'Build executable saved to: "{CONFIG["dist"]["exe"]}"')
     EchoStyle.Complete.echo("Build")
 
 
-def copy():
-    """Step 4: Copy"""
-
-    EchoStyle.Title.echo("Copy the required files")
-    for src, dst in CONFIG["copy"]:
-        EchoStyle.Running.echo(f'Copying "{src}" to "{dst}"...')
-        shutil.copy(utils.path_resolve(ROOT, src), os.path.join(DIST, dst))
-    EchoStyle.Running.echo(f'All the required files are now in: "{DIST}"')
-    EchoStyle.Complete.echo("Copy")
-
-
 def checksum() -> str:
-    """Step 5: Checksum"""
+    """Step 4: Checksum"""
 
     EchoStyle.Title.echo('SHA256 Checksum of "you-get" executable')
-    hash_value = utils.sha256sum(CONFIG["dist"]["path"])
-    output = CONFIG["sha256sum"]
-    with open(output, "w", encoding="utf-8") as f:
-        f.write(f'{hash_value} *{EXECUTABLE}')
-
+    hash_value = utils.sha256sum(CONFIG["dist"]["exe"])
     EchoStyle.Running.echo(f'SHA256 Checksum: {hash_value}')
     # EchoStyle.Running.echo("SHA256 Checksum has been copied into your clipboard.")
-    EchoStyle.Running.echo(f'Checksum file saved to: "{output}"')
     EchoStyle.Complete.echo("Checksum")
 
     return hash_value
 
 
-def convert_line_endings():
-    """Step 6: CRLF to LF"""
-
-    EchoStyle.Title.echo("Convert line endings to LF")
-    for file in CONFIG["crlf2lf"]:
-        EchoStyle.Running.echo(f'Converting "{file}"...')
-        utils.crlf_to_lf(os.path.join(DIST, file))
-    EchoStyle.Complete.echo("Convert")
-
-
-def package():
-    """Step 7: Zip all the required files"""
+def package(sha256: str):
+    """Step 5: Zip all the required files"""
 
     EchoStyle.Title.echo('Generate "you-get.zip"')
-    output = CONFIG["zip"]["path"]
-    utils.compress_files(output, DIST, CONFIG["zip"]["list"], CONFIG["zip"]["comment"])
+    output = CONFIG["dist"]["zip"]
+
+    with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as z:
+        # add build output executable
+        z.write(CONFIG["dist"]["exe"], arcname=EXECUTABLE)
+        # add documents after converting line endings
+        for file in CONFIG["zip"]["docs"]:
+            z.writestr(file[1], utils.crlf_to_lf(os.path.join(ROOT, file[0])))
+        # add checksum file
+        z.writestr(CONFIG["zip"]["checksum"], f"{sha256} *{EXECUTABLE}")
+        # assign comment
+        with open(CONFIG["zip"]["comment"], "r", encoding="utf-8") as f:
+            z.comment = f.read().encode("utf-8")
+
     EchoStyle.Running.echo(f'Zip archive file saved to:\n   "{output}"')
     EchoStyle.Complete.echo("Zip")
 
 
 def ci(sha256: str):
-    """Step 88: CI-specific step
-
-    1. generate `artifact_info.json`
-    2. ...
-    """
+    """Step 88: CI-specific step"""
 
     if not FLAGS["ci"]:
         return
 
     import PyInstaller
 
-    with open(CONFIG["ci"]["artifact_info"], "w", encoding="utf-8") as f:
-        f.write(ArtifactInfo(
-            filename=DIST_FILENAME,
-            sha256=sha256,
-            py_version=py_version(),
-            py_arch=py_arch(),
-            poetry_version=poetry_version(),
-            pyinstaller_version=PyInstaller.__version__,
-        ).json())
+    # generate `artifact_info.json`
+    ArtifactInfo(
+        filename=DIST_FILENAME,
+        sha256=sha256,
+        py_version=py_version(),
+        py_arch=py_arch(),
+        poetry_version=poetry_version(),
+        pyinstaller_version=PyInstaller.__version__,
+    ).dump(DIST)
 
 
 def finish():
@@ -297,10 +273,8 @@ def main():
     check()
     clean()
     build()
-    copy()
     sha256 = checksum()
-    convert_line_endings()
-    package()
+    package(sha256)
     ci(sha256)
     finish()
     return

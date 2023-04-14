@@ -30,6 +30,7 @@ class CoreInfo(Info):
 
 
 class ArtifactInfo(Info):
+    DUMP_FILENAME = "artifact_info.json"
 
     def __init__(self, filename: str, sha256: str, py_version: str, py_arch: str, poetry_version: str,
                  pyinstaller_version: str):
@@ -61,6 +62,16 @@ class ArtifactInfo(Info):
     def json(self) -> str:
         """Return the JSON representation of this ArtifactInfo."""
         return json.dumps(self.__dict__, indent=2)
+
+    def dump(self, dest: str):
+        """Save the JSON representation of this ArtifactInfo into target dir or file.
+
+        :param dest: if `dest` is an existing directory, the filename will be "artifact_info.json"
+        """
+        from os.path import isdir, join
+        target = join(dest, self.DUMP_FILENAME) if isdir(dest) else dest
+        with open(target, "w", encoding="utf-8") as f:
+            f.write(self.json())
 
     def inject_into(self, template: str) -> str:
         """Format the template string with data from this ArtifactInfo instance."""
