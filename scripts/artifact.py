@@ -59,9 +59,9 @@ class ArtifactInfo(Info):
             pyinstaller_version=data.get("pyinstaller_version", UNKNOWN),
         )
 
-    def json(self) -> str:
+    def json(self, indent: int = 2) -> str:
         """Return the JSON representation of this ArtifactInfo."""
-        return json.dumps(self.__dict__, indent=2)
+        return json.dumps(self.__dict__, indent=indent)
 
     def dump(self, dest: str):
         """Save the JSON representation of this ArtifactInfo into target dir or file.
