@@ -37,7 +37,7 @@ jobs:
         # https://github.com/actions/checkout/issues/503
         run: |
           git submodule update --init --recursive
-          cd repository/you-get
+          cd build/you-get
           git checkout ${{ inputs.you_get_tag }}
 
       - name: "Set up Python ${{ matrix.python-version }}"
