@@ -4,19 +4,19 @@ on:
   workflow_dispatch:
     inputs:
       you_get_tag:
-        description: "Tag name of the target you-get version"
+        description: "Tag name of the target you-get version (e.g. 'v0.4.1650')"
         required: true
         default: "develop"
         type: string
       poetry_version:
         description: "Set the version of Poetry to use"
         required: true
-        default: "1.4.2"
+        default: "1.7.1"
         type: string
       main_python_version:
         description: "Select a Python version for the main release"
         required: true
-        default: "3.8"
+        default: "3.9"
         type: string
 
 jobs:
@@ -25,11 +25,11 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
-        arch: [ "x86", "x64" ]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        arch: ["x86", "x64"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: false
 
@@ -40,23 +40,24 @@ jobs:
           cd build/you-get
           git checkout ${{ inputs.you_get_tag }}
 
-      - name: "Set up Python ${{ matrix.python-version }}"
-        uses: actions/setup-python@v4
+      - name: Install poetry
+        # https://github.com/actions/setup-python/blob/e9d6f990972a57673cdb72ec29e19d42ba28880f/docs/advanced-usage.md?plain=1#L309-L321
+        run: pipx install poetry==${{ inputs.poetry_version }}
+
+      - name: "Setup Python ${{ matrix.python-version }}"
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.arch }}
-
-      - name: "Setup poetry"
-        uses: Gr1N/setup-poetry@v8
-        with:
-          poetry-version: ${{ inputs.poetry_version }}
+          # Do NOT use cache here to avoid PyInstaller selecting the wrong python architecture
+          # cache: "poetry"
 
       - name: "Build you-get.exe"
         run: |
-          poetry install
+          poetry install --no-interaction --no-root
           poetry run python build.py --ci
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: you-get_py${{ matrix.python-version }}_${{ matrix.arch }}
           path: |
@@ -69,9 +70,9 @@ jobs:
     needs: build
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           path: .ci
 

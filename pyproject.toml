@@ -5,20 +5,20 @@ description = "You-Get unofficial build executable for Windows"
 authors = ["Lussac Zheng <lussaczheng@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.7.4,<3.12"
+python = ">=3.8,<3.13"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pyinstaller = ">4.0, !=5.0"
 
 [[tool.poetry.source]]
 name = "tsinghua"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-secondary = true
+priority = "supplemental"
 
 [[tool.poetry.source]]
 name = "aliyun"
 url = "https://mirrors.aliyun.com/pypi/simple/"
-secondary = true
+priority = "supplemental"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

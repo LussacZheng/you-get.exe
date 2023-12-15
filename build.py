@@ -85,7 +85,7 @@ def clean():
         if not os.path.isfile(file_path):
             return
         if not force_delete:
-            choose = input(f' ? "{file_path}".\n ? Is it OK to delete this file (Y/N)? ').upper()
+            choose = input(f' ? "{file_path}".\n ? Is it OK to delete this file (y/N)? ').upper()
             if choose != "Y":
                 EchoStyle.Exit.echo("Clean canceled.")
         os.remove(file_path)

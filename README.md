@@ -39,7 +39,7 @@ See below if you want to bundle and build by yourself.
 
 The following dependencies are required and must be installed separately.
 
-- [Python 3.7-3.11](https://www.python.org/downloads/windows/)  
+- [Python 3.8-3.12](https://www.python.org/downloads/windows/)  
    You can find the supported Python versions in the [README](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms) of PyInstaller.
    To create a 32-bit executable, run PyInstaller under a 32-bit Python.
 
@@ -54,7 +54,7 @@ The following dependencies are required and must be installed separately.
 git clone --recurse-submodules https://github.com/LussacZheng/you-get.exe.git
 
 # create virtualenv and install dependencies
-poetry install
+poetry install --no-root
 
 # run `build.py` under virtualenv
 poetry run python build.py
