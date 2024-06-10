@@ -79,6 +79,8 @@ git pull
 
 # 更新 `you-get` 项目仓库
 git submodule update --remote
+# cd build\you-get
+# git checkout v0.x.xxxx
 
 # 更新依赖
 poetry update

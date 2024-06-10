@@ -11,12 +11,12 @@ on:
       poetry_version:
         description: "Set the version of Poetry to use"
         required: true
-        default: "1.7.1"
+        default: "1.8.3"
         type: string
       main_python_version:
         description: "Select a Python version for the main release"
         required: true
-        default: "3.9"
+        default: "3.10"
         type: string
 
 jobs:
@@ -85,7 +85,7 @@ jobs:
           python scripts/ci/main.py --poetry ${{ inputs.poetry_version }} --main ${{ inputs.main_python_version }}
 
       - name: "Release"
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: .ci/**/*.zip
           # draft: true

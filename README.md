@@ -72,6 +72,8 @@ git pull
 
 # update the repository of `you-get`
 git submodule update --remote
+# cd build\you-get
+# git checkout v0.x.xxxx
 
 # update dependencies
 poetry update
