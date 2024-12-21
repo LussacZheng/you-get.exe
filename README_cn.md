@@ -39,7 +39,7 @@ you-get -k --debug https://your.video/url/here
 
 依次安装以下依赖或运行相应命令。
 
-- [Python 3.8-3.12](https://www.python.org/downloads/windows/)  
+- [Python 3.8-3.13](https://www.python.org/downloads/windows/)  
    在 PyInstaller 的[说明文档](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms)中可以找到其支持的 Python 版本号。
    若需创建32位的可执行文件，请在32位 Python 环境下运行 PyInstaller 。
 
@@ -61,7 +61,7 @@ you-get -k --debug https://your.video/url/here
 git clone --recurse-submodules https://github.com/LussacZheng/you-get.exe.git
 
 # 创建虚拟环境并安装依赖
-poetry install --no-root
+poetry install
 
 在虚拟环境中运行 `build.py`
 poetry run python build.py
