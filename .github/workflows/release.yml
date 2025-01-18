@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       you_get_tag:
-        description: "Tag name of the target you-get version (e.g. 'v0.4.1650')"
+        description: "Tag name of the target you-get version (e.g. 'v0.4.1743')"
         required: true
         default: "develop"
         type: string
