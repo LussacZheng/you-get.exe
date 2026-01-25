@@ -11,12 +11,12 @@ OUTPUT = os.path.join(_dir, "you-get.exe.zip")
 INCLUDE = [
     "build/",
     "scripts/dev/build-and-log.py",
+    ".python-version",
     "build.py",
-    "poetry.lock",
-    "poetry.toml",
     "pyproject.toml",
     "README.md",
     "README_cn.md",
+    "uv.lock",
 ]
 EXCLUDE = [".git", "__pycache__", "you-get_extracted_from_0.4.985.ico"]
 

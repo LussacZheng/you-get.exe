@@ -45,17 +45,17 @@ def py_arch() -> str:
     return platform.architecture()[0].rstrip("bit")
 
 
-def poetry_version() -> str:
-    """Get the version of currently installed Poetry."""
+def uv_version() -> str:
+    """Get the version of currently installed uv."""
 
     try:
-        version = subprocess.run(["poetry", "--version"], capture_output=True, text=True).stdout.strip()
-        return re.search(r"(\d[\d.]+)", version).group(1)
+        version = subprocess.run(["uv", "--version"], capture_output=True, text=True).stdout.strip()
+        return re.search(r"uv (\d[\d.]+)", version).group(1)
     except (subprocess.CalledProcessError, FileNotFoundError, AttributeError):
         return UNKNOWN
 
 
-def pyinstaller_version(lock_file="poetry.lock") -> str:
+def pyinstaller_version(lock_file="uv.lock") -> str:
     """Get the version of currently installed PyInstaller."""
 
     return _read_and_search(os.path.join(ROOT, lock_file), 'name = "pyinstaller"\nversion = "(.*)"')
@@ -83,6 +83,6 @@ def _read_and_search(file_path: str, regexp: str) -> str:
         with open(file_path, "r", encoding="utf-8") as f:
             return re.search(regexp, f.read()).group(1)
     except FileNotFoundError as e:
-        sys.exit(e)
+        sys.exit(str(e))
     except AttributeError:
         sys.exit(f"[ERROR] Unable to find substring matching `{regexp}` in `{file_path}`")

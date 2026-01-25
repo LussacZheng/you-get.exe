@@ -13,18 +13,18 @@ class Info(metaclass=ABCMeta):
 
 class CoreInfo(Info):
 
-    def __init__(self, main_py_version: str, poetry_version: str, pyinstaller_version: str):
+    def __init__(self, main_py_version: str, uv_version: str, pyinstaller_version: str):
         """
         :param main_py_version: Note that version string starting with `py` is also valid (e.g. `py3.8`).
         """
         self.main_py_version = main_py_version[2:] if main_py_version.startswith("py") else main_py_version
-        self.poetry_version = poetry_version
+        self.uv_version = uv_version
         self.pyinstaller_version = pyinstaller_version
 
     def inject_into(self, template: str) -> str:
         """Format the template string with data from this CoreInfo instance."""
         return Template(template).safe_substitute(
-            poetry_version=self.poetry_version,
+            uv_version=self.uv_version,
             pyinstaller_version=self.pyinstaller_version,
         )
 
@@ -32,7 +32,7 @@ class CoreInfo(Info):
 class ArtifactInfo(Info):
     DUMP_FILENAME = "artifact_info.json"
 
-    def __init__(self, filename: str, sha256: str, py_version: str, py_arch: str, poetry_version: str,
+    def __init__(self, filename: str, sha256: str, py_version: str, py_arch: str, uv_version: str,
                  pyinstaller_version: str):
         self.filename = filename
         self.sha256 = sha256
@@ -40,7 +40,7 @@ class ArtifactInfo(Info):
         self.py_version = py_version
 
         self.py_arch = py_arch
-        self.poetry_version = poetry_version
+        self.uv_version = uv_version
         self.pyinstaller_version = pyinstaller_version
 
     def __repr__(self):
@@ -55,7 +55,7 @@ class ArtifactInfo(Info):
             sha256=data.get("sha256", UNKNOWN),
             py_version=data.get("py_version", UNKNOWN),
             py_arch=data.get("py_arch", UNKNOWN),
-            poetry_version=data.get("poetry_version", UNKNOWN),
+            uv_version=data.get("uv_version", UNKNOWN),
             pyinstaller_version=data.get("pyinstaller_version", UNKNOWN),
         )
 

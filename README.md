@@ -39,13 +39,16 @@ See below if you want to bundle and build by yourself.
 
 The following dependencies are required and must be installed separately.
 
-- [Python 3.8-3.13](https://www.python.org/downloads/windows/)  
-   You can find the supported Python versions in the [README](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms) of PyInstaller.
-   To create a 32-bit executable, run PyInstaller under a 32-bit Python.
-
-- [Poetry](https://python-poetry.org/docs/#installation)
-
 - [Git](https://git-scm.com/)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) with Python 3.8-3.14  
+  You can find the supported Python versions in the [README](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms) of PyInstaller.
+
+  ```shell
+  # Specify the version of Python you need
+  uv python pin 3.14
+  # To create a 32-bit executable, run PyInstaller under a 32-bit Python
+  uv python pin 3.14-x86
+  ```
 
 ### Build for the first time
 
@@ -53,11 +56,8 @@ The following dependencies are required and must be installed separately.
 # clone this repository
 git clone --recurse-submodules https://github.com/LussacZheng/you-get.exe.git
 
-# create virtualenv and install dependencies
-poetry install
-
 # run `build.py` under virtualenv
-poetry run python build.py
+uv run build.py
 ```
 
 Find the executable in `dist/` directory.
@@ -76,10 +76,10 @@ git submodule update --remote
 # git checkout v0.x.xxxx
 
 # update dependencies
-poetry update
+uv sync
 
 # re-run `build.py` under virtualenv
-poetry run python build.py
+uv run build.py
 ```
 
 Find the executable in `dist/` directory.
@@ -93,6 +93,7 @@ Find the executable in `dist/` directory.
 - [x] Use GitHub Actions to build and release.
 - [x] Add `you-get` as git submodule.
 - [x] Automatically append missing extractors to `src/you_get/extractors/__init__.py` when building.
+- [x] Introduce [uv](https://github.com/astral-sh/uv) instead of [Poetry](https://github.com/python-poetry/poetry) for Python and dependency management.
 - [ ] Support Linux and macOS.
 
 ## License

@@ -8,15 +8,10 @@ on:
         required: true
         default: "develop"
         type: string
-      poetry_version:
-        description: "Set the version of Poetry to use"
-        required: true
-        default: "1.8.5"
-        type: string
       main_python_version:
         description: "Select a Python version for the main release"
         required: true
-        default: "3.12"
+        default: "3.13"
         type: string
 
 jobs:
@@ -25,8 +20,10 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
-        arch: ["x86", "x64"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        arch: ["x86", "x86_64"]
+    outputs:
+      uv-version: ${{ steps.setup-uv.outputs.uv-version }}
 
     steps:
       - uses: actions/checkout@v4
@@ -40,28 +37,17 @@ jobs:
           cd build/you-get
           git checkout ${{ inputs.you_get_tag }}
 
-      - name: "Setup Python ${{ matrix.python-version }}"
-        uses: actions/setup-python@v5
+      - name: Install the latest version of uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@v7
         with:
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.arch }}
-          # Do NOT use cache here to avoid PyInstaller selecting the wrong python architecture
-          # cache: "poetry"
-
-      # https://github.com/actions/setup-python/issues/967#issuecomment-2461381640
-      - name: "Install pipx"
-        run: python -m pip install --user pipx
-      - name: "Ensure pipx uses the correct Python"
-        run: python -m pipx ensurepath
-
-      - name: Install poetry
-        # https://github.com/actions/setup-python/blob/e9d6f990972a57673cdb72ec29e19d42ba28880f/docs/advanced-usage.md?plain=1#L309-L321
-        run: pipx install poetry==${{ inputs.poetry_version }}
+          python-version: "${{ matrix.python-version }}-${{ matrix.arch }}"
+          # cache-python: "false"
 
       - name: "Build you-get.exe"
         run: |
-          poetry install --no-interaction --no-root
-          poetry run python build.py --ci
+          uv sync --frozen --index https://pypi.org/simple
+          uv run build.py --ci
 
       - uses: actions/upload-artifact@v4
         with:
@@ -88,7 +74,7 @@ jobs:
           PYTHONPATH: .
         run: |
           echo "date=$(date '+%y%m%d')" >> "$GITHUB_OUTPUT"
-          python scripts/ci/main.py --poetry ${{ inputs.poetry_version }} --main ${{ inputs.main_python_version }}
+          python scripts/ci/main.py --uv ${{ needs.build.outputs.uv-version }} --main ${{ inputs.main_python_version }}
 
       - name: "Release"
         uses: softprops/action-gh-release@v2

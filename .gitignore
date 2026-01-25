@@ -2,8 +2,11 @@
 .idea
 .vscode
 
-# Project, PyInstaller, build.py
+# Python project, PyInstaller, build.py
 __pycache__
+*.py[oc]
+wheels/
+*.egg-info
 .temp
 .venv
 build/__init__.py

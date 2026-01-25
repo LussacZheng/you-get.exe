@@ -1,27 +1,45 @@
-[tool.poetry]
-name = "you-get.exe"
+[project]
+name = "you-get-exe"
 version = "0.1.0"
 description = "You-Get unofficial build executable for Windows"
-authors = ["Lussac Zheng <lussaczheng@gmail.com>"]
-package-mode = false
+authors = [
+    { name = "Lussac Zheng", email = "lussaczheng@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.8, <3.15, !=3.10.0"
+dependencies = [
+    "dukpy >=0.5.0"
+]
 
-[tool.poetry.dependencies]
-python = ">=3.8, <3.14, !=3.10.0"
-dukpy = "^0.5.0"
 
-[tool.poetry.group.dev.dependencies]
-pyinstaller = ">4.0, !=5.0"
+[project.optional-dependencies]
+# currently not required
 
-[[tool.poetry.source]]
+
+[dependency-groups]
+dev = [
+  "pyinstaller >4.0, !=5.0"
+]
+
+[tool.uv]
+package = false
+required-version = ">=0.9.26"
+
+[[tool.uv.index]]
 name = "tsinghua"
-url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-priority = "supplemental"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 
-[[tool.poetry.source]]
+[[tool.uv.index]]
 name = "aliyun"
-url = "https://mirrors.aliyun.com/pypi/simple/"
-priority = "supplemental"
+url = "https://mirrors.aliyun.com/pypi/simple"
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
+
+# This project is not a "Packaged application", we don't need [build-system].
+# [build-system]
+# requires = ["uv_build>=0.9.26,<0.10.0"]
+# build-backend = "uv_build"

@@ -39,20 +39,16 @@ you-get -k --debug https://your.video/url/here
 
 依次安装以下依赖或运行相应命令。
 
-- [Python 3.8-3.13](https://www.python.org/downloads/windows/)  
-   在 PyInstaller 的[说明文档](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms)中可以找到其支持的 Python 版本号。
-   若需创建32位的可执行文件，请在32位 Python 环境下运行 PyInstaller 。
-
-- [Poetry](https://python-poetry.org/docs/#installation)
-
-   ```shell
-   # 安装时可能需要使用代理
-   # set HTTP_PROXY=http://127.0.0.1:7890 & set HTTPS_PROXY=http://127.0.0.1:7890
-   wget https://install.python-poetry.org -O install-poetry.py
-   python3 install-poetry.py
-   ```
-
 - [Git](https://git-scm.com/)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) 以及 Python 3.8-3.14  
+  在 PyInstaller 的[说明文档](https://github.com/pyinstaller/pyinstaller#requirements-and-tested-platforms)中可以找到其支持的 Python 版本号。
+
+  ```shell
+  # 指定你所需要的 Python 版本
+  uv python pin 3.14
+  # 若需创建32位的可执行文件，请在32位 Python 环境下运行 PyInstaller
+  uv python pin 3.14-x86
+  ```
 
 ### 第一次构建
 
@@ -60,11 +56,8 @@ you-get -k --debug https://your.video/url/here
 # 获取此项目
 git clone --recurse-submodules https://github.com/LussacZheng/you-get.exe.git
 
-# 创建虚拟环境并安装依赖
-poetry install
-
-在虚拟环境中运行 `build.py`
-poetry run python build.py
+# 在虚拟环境中运行 `build.py`
+uv run build.py
 ```
 
 打包好的可执行文件为 `dist/` 文件夹下。
@@ -83,10 +76,10 @@ git submodule update --remote
 # git checkout v0.x.xxxx
 
 # 更新依赖
-poetry update
+uv sync
 
 # 重新在虚拟环境中运行 `build.py`
-poetry run python build.py
+uv run build.py
 ```
 
 打包好的可执行文件在 `dist/` 文件夹下。
@@ -100,6 +93,7 @@ poetry run python build.py
 - [x] 使用 GitHub Actions 进行构建和发布。
 - [x] 将 `you-get` 作为 git submodule 管理。
 - [x] 构建时自动向 `src/you_get/extractors/__init__.py` 追加缺失的 extractors。
+- [x] 引入 [uv](https://github.com/astral-sh/uv) 代替 [Poetry](https://github.com/python-poetry/poetry) 用于 Python 及依赖管理。
 - [ ] 支持 Linux 和 macOS。
 
 ## License

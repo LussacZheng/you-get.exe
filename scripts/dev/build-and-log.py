@@ -13,8 +13,8 @@ def main():
     sys.path.append(ROOT)
     from build import DIST, DIST_FILENAME
 
-    if shutil.which("poetry") is None:
-        print(" * You should install `poetry` first.")
+    if shutil.which("uv") is None:
+        print(" * You should install `uv` first.")
         return
 
     os.chdir(ROOT)
@@ -29,7 +29,7 @@ def main():
     with open(log, "w", encoding="utf-8") as f:
         # "python -u": force the stdout and stderr streams to be unbuffered
         # "build.py --force": force delete the outputs of last build
-        subprocess.run(["poetry", "run", "python", "-u", "build.py", "--force"], stdout=f, stderr=subprocess.STDOUT)
+        subprocess.run(["uv", "run", "--", "python", "-u", "build.py", "--force"], stdout=f, stderr=subprocess.STDOUT)
 
     print(" * All completed.")
     print(f" * Build logs saved in: `{log}`")

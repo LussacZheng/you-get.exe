@@ -10,7 +10,7 @@ import zipfile
 from scripts import utils, ROOT
 from scripts.artifact import ArtifactInfo
 from scripts.echo import EchoStyle
-from scripts.versions import py_version, py_arch, you_get_version, you_get_version_tuple, poetry_version
+from scripts.versions import py_version, py_arch, you_get_version, you_get_version_tuple, uv_version
 
 # region ########## Config ##########
 
@@ -254,7 +254,7 @@ def ci(sha256: str):
         sha256=sha256,
         py_version=py_version(),
         py_arch=py_arch(),
-        poetry_version=poetry_version(),
+        uv_version=uv_version(),
         pyinstaller_version=PyInstaller.__version__,
     ).dump(DIST)
 

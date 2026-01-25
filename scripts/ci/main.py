@@ -7,6 +7,7 @@ import os
 import re
 import shutil
 import sys
+from typing import List
 
 from scripts import ROOT
 from scripts.artifact import ArtifactInfo, CoreInfo
@@ -16,7 +17,7 @@ from scripts.versions import pyinstaller_version, py_version_strings_match
 
 def cli():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--poetry", required=True, help="set the version of Poetry to use", metavar="VERSION")
+    parser.add_argument("--uv", required=True, help="set the version of uv to use", metavar="VERSION")
     parser.add_argument("--main", required=True, help="select a Python version for the main release",
                         metavar="PY_VERSION")
     return parser.parse_args()
@@ -29,10 +30,10 @@ def get_core_info() -> CoreInfo:
         print(f"Please select a valid Python version, not `{arg.main}`!")
         sys.exit(1)
 
-    return CoreInfo(arg.main, arg.poetry, pyinstaller_version())
+    return CoreInfo(arg.main, arg.uv, pyinstaller_version())
 
 
-def get_artifact_infos() -> list[ArtifactInfo]:
+def get_artifact_infos() -> List[ArtifactInfo]:
     location = os.path.join(ROOT, ".ci/**/*.json")
 
     artifact_infos = []
@@ -50,7 +51,7 @@ def get_artifact_infos() -> list[ArtifactInfo]:
     return artifact_infos
 
 
-def select_main_artifacts(artifact_infos: list[ArtifactInfo], main_py_version: str) -> list[ArtifactInfo]:
+def select_main_artifacts(artifact_infos: List[ArtifactInfo], main_py_version: str) -> List[ArtifactInfo]:
     targets = []
     for artifact_info in artifact_infos:
         if py_version_strings_match(main_py_version, artifact_info.py_version):
@@ -64,11 +65,11 @@ def select_main_artifacts(artifact_infos: list[ArtifactInfo], main_py_version: s
 
     for target in targets:
         for archive in glob.glob(os.path.join(ROOT, f".ci/**/{target.filename}")):
-            dirname, filename = os.path.split(archive)
+            dir_name, filename = os.path.split(archive)
             # Convert the filename of a normal artifact into the format of the main artifact.
             # e.g. 'you-get_0.4.1650_win64_py3.11.0_UB221214.zip' --> 'you-get_0.4.1650_win64_UB221214.zip'
             target.filename = re.sub(r"_py[\d.]+_", "_", filename)
-            shutil.copy2(archive, os.path.join(dirname, target.filename))
+            shutil.copy2(archive, os.path.join(dir_name, target.filename))
 
     return targets
 
